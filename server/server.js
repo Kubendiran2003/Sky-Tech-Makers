@@ -14,7 +14,14 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ 
+  origin: [
+    "http://localhost:5173", 
+    "https://id-preview--e73f756d-941c-4cb6-835b-84d69e54a3ce.lovable.app"
+  ], 
+  credentials: true 
+}));
+
 app.use(express.json());
 app.use(cookieParser());
 
