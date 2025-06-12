@@ -17,7 +17,7 @@ const app = express();
 app.use(cors({ 
   origin: [
     "http://localhost:5173", 
-    "https://id-preview--e73f756d-941c-4cb6-835b-84d69e54a3ce.lovable.app"
+    "https://e73f756d-941c-4cb6-835b-84d69e54a3ce.lovableproject.com"
   ], 
   credentials: true 
 }));
