@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.post("/", isAuthenticated, submitQuestion);
 router.get("/", getQuestions);
-router.get('/pending', verifyAdmin, getPendingQuestions);
+router.get("/pending", isAuthenticated, authorizeRoles("Admin"), getPendingQuestions);
 router.put("/:id/approve", isAuthenticated, authorizeRoles("Admin"), approveQuestion);
 router.delete("/:id", isAuthenticated, authorizeRoles("Admin"), deleteQuestion);
 

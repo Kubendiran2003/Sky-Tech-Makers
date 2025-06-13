@@ -16,8 +16,7 @@ const app = express();
 // Middleware
 app.use(cors({ 
   origin: [
-    "http://localhost:5173", 
-    "https://e73f756d-941c-4cb6-835b-84d69e54a3ce.lovableproject.com"
+    "http://localhost:5173"
   ], 
   credentials: true 
 }));
