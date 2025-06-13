@@ -25,3 +25,8 @@ exports.deleteQuestion = async (req, res) => {
   await Question.findByIdAndDelete(req.params.id);
   res.json({ msg: "Deleted" });
 };
+
+exports.getPendingQuestions = async (req, res) => {
+  const questions = await Question.find({ approved: false }).populate("author", "name");
+  res.json(questions);
+};
