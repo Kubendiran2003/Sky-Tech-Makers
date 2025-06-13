@@ -37,17 +37,18 @@ export default function AdminPanel() {
       setError(null);
 
       // Fetch both blogs and pending blogs in parallel
-      const [blogsData, pendingBlogData, questionsData] = await Promise.all([
-        getBlogs(),
-        getPendingBlogs(),
-        getQuestions(),
-        getPendingQuestions()
-      ]);
+      const [blogsData, pendingBlogData, questionsData, pendingQuestionData] = await Promise.all([
+  getBlogs(),
+  getPendingBlogs(),
+  getQuestions(),
+  getPendingQuestions()
+]);
 
-      setAllBlogs(blogsData);
-    setPendingBlogs(pendingBlogData);
-    setAllQuestions(questionsData);
-    setPendingQuestions(pendingQuestionData);
+setAllBlogs(blogsData);
+setPendingBlogs(pendingBlogData);
+setAllQuestions(questionsData);
+setPendingQuestions(pendingQuestionData);
+
   } catch (err) {
     console.error('Error fetching admin data:', err);
     setError('Failed to load admin data. Please try again.');

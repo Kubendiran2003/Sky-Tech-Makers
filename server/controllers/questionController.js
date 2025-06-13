@@ -27,6 +27,12 @@ exports.deleteQuestion = async (req, res) => {
 };
 
 exports.getPendingQuestions = async (req, res) => {
-  const questions = await Question.find({ approved: false }).populate("author", "name");
-  res.json(questions);
+  try {
+    const questions = await Question.find({ approved: false }).populate("submittedBy", "name");
+    res.json(questions);
+  } catch (error) {
+    console.error("Error fetching pending questions:", error);
+    res.status(500).json({ message: "Server error fetching pending questions" });
+  }
 };
+
