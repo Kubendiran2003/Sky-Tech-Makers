@@ -14,6 +14,7 @@ import CreateBlog from './pages/CreateBlog';
 import AdminPanel from './pages/AdminPanel';
 import NotFound from './pages/NotFound';
 import Layout from './components/Layout';
+import SubmitQuestion from './pages/SubmitQuestion';
 
 export default function App() {
   return (
@@ -34,6 +35,7 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="create-blog" element={<CreateBlog />} />
+            <Route path="questions/new" element={<SubmitQuestion />} />
           </Route>
 
           {/* Admin Routes */}

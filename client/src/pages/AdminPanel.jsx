@@ -251,7 +251,7 @@ setPendingQuestions(pendingQuestionData);
                   <div className="flex flex-col md:flex-row justify-between gap-4">
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold text-gray-900">{blog.title}</h3>
-                      <p className="mt-1 text-gray-600 line-clamp-2">{blog.content?.substring(0, 200)}...</p>
+                      <p className="mt-1 text-gray-600 line-clamp-2">{blog.content?.substring(0, 300)}...</p>
                       
                       {blog.tags?.length > 0 && (
                         <div className="mt-2 flex flex-wrap gap-2">
