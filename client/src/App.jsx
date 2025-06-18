@@ -1,20 +1,20 @@
-import { Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
-import AdminRoute from './components/AdminRoute';
-import Home from './pages/Home';
-import Blogs from './pages/Blogs';
-import BlogDetails from './pages/BlogDetails';
-import Questions from './pages/Questions';
-import Tools from './pages/Tools';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import CreateBlog from './pages/CreateBlog';
-import AdminPanel from './pages/AdminPanel';
-import NotFound from './pages/NotFound';
-import Layout from './components/Layout';
-import SubmitQuestion from './pages/SubmitQuestion';
+import { Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
+import Home from "./pages/Home";
+import Blogs from "./pages/Blogs";
+import BlogDetails from "./pages/BlogDetails";
+import Questions from "./pages/Questions";
+import Tools from "./pages/Tools";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import CreateBlog from "./pages/CreateBlog";
+import AdminPanel from "./pages/AdminPanel";
+import NotFound from "./pages/NotFound";
+import Layout from "./components/Layout";
+import SubmitQuestion from "./pages/SubmitQuestion";
 
 export default function App() {
   return (
