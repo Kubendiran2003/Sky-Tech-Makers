@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
   password: { type: String },
   role: { type: String, enum: ["User", "Admin"], default: "User" },
+  rollNumber: { type: String, unique: true, sparse: true },
   savedBlogs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Blog" }],
 });
 

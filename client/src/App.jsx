@@ -15,6 +15,7 @@ import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
 import Layout from "./components/Layout";
 import SubmitQuestion from "./pages/SubmitQuestion";
+import Leaderboard from "./pages/Leaderboard";
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="blogs/:id" element={<BlogDetails />} />
           <Route path="questions" element={<Questions />} />
           <Route path="tools" element={<Tools />} />
+          <Route path="leaderboard" element={<Leaderboard />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
 

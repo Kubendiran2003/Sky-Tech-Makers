@@ -1,210 +1,211 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { getProfile } from '../services/auth'
-import { getBlogs } from '../services/blogs'
-import { FiBook, FiBookmark, FiUser, FiSettings } from 'react-icons/fi'
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { getProfile } from "../services/auth";
+import { getBlogs } from "../services/blogs";
+import {
+  FiBook, FiUser, FiSettings, FiPlusCircle,
+  FiZap, FiCheckCircle, FiClock, FiAward, FiArrowRight,
+} from "react-icons/fi";
+
+const fadeIn = (delay = 0) => ({
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.45, delay },
+});
 
 export default function Dashboard() {
-  const [user, setUser] = useState(null)
-  const [blogs, setBlogs] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState(null);
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [profileData, blogsData] = await Promise.all([
-          getProfile(),
-          getBlogs()
-        ])
-        
-        setUser(profileData)
-        setBlogs(blogsData.filter(blog => blog.author?._id === profileData._id))
+        const [profileData, blogsData] = await Promise.all([getProfile(), getBlogs()]);
+        setUser(profileData);
+        setBlogs(blogsData.filter((blog) => blog.author?._id === profileData._id));
       } catch (error) {
-        console.error('Error fetching dashboard data:', error)
+        console.error("Error fetching dashboard data:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    
-    fetchData()
-  }, [])
+    };
+    fetchData();
+  }, []);
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-2 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-slate-500 text-sm">Loading your dashboard...</p>
+        </div>
       </div>
-    )
+    );
   }
 
+  const stats = [
+    {
+      icon: FiUser,
+      label: "Account Type",
+      value: user?.role || "User",
+      color: "from-indigo-500 to-violet-600",
+      bg: "bg-indigo-500/10",
+      border: "border-indigo-500/20",
+    },
+    {
+      icon: FiBook,
+      label: "Your Blogs",
+      value: blogs.length,
+      color: "from-sky-500 to-indigo-500",
+      bg: "bg-sky-500/10",
+      border: "border-sky-500/20",
+    },
+    {
+      icon: FiAward,
+      label: "Roll Number",
+      value: user?.rollNumber || "—",
+      color: "from-amber-500 to-orange-500",
+      bg: "bg-amber-500/10",
+      border: "border-amber-500/20",
+    },
+  ];
+
   return (
-    <div className="py-12 bg-gray-50">
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="mb-12"
-        >
-          <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-          <p className="text-gray-600">Welcome back, {user?.name}!</p>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 grid-pattern opacity-25 pointer-events-none" />
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-indigo-600/8 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+
+        {/* Header */}
+        <motion.div {...fadeIn(0)} className="mb-10">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/25">
+              <FiZap className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+              <p className="text-slate-500 text-sm">Welcome back, <span className="text-indigo-400 font-semibold">{user?.name}</span> 👋</p>
+            </div>
+          </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-primary"
-          >
-            <div className="flex items-center">
-              <div className="p-3 rounded-full bg-primary/10 text-primary mr-4">
-                <FiUser className="h-6 w-6" />
+        {/* Stats */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+          {stats.map(({ icon: Icon, label, value, color, bg, border }, i) => (
+            <motion.div key={label} {...fadeIn(i * 0.08)}>
+              <div className={`p-5 rounded-2xl bg-[#10121f] border ${border} flex items-center gap-4 group hover:border-opacity-40 transition-all duration-300`}>
+                <div className={`w-11 h-11 rounded-xl ${bg} flex items-center justify-center flex-shrink-0`}>
+                  <div className={`bg-gradient-to-br ${color} bg-clip-text`}>
+                    <Icon className={`w-5 h-5 bg-gradient-to-br ${color} [&>path]:fill-current text-transparent`} style={{ color: "transparent", backgroundImage: `linear-gradient(135deg, var(--tw-gradient-stops))` }} />
+                  </div>
+                </div>
+                <div>
+                  <p className="text-slate-500 text-xs font-medium uppercase tracking-wider">{label}</p>
+                  <p className="text-white font-bold text-xl capitalize">{value}</p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-lg font-medium text-gray-500">Account Type</h3>
-                <p className="text-2xl font-semibold text-gray-900 capitalize">{user?.role.toLowerCase()}</p>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
-            className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-secondary"
-          >
-            <div className="flex items-center">
-              <div className="p-3 rounded-full bg-secondary/10 text-secondary mr-4">
-                <FiBook className="h-6 w-6" />
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-gray-500">Your Blogs</h3>
-                <p className="text-2xl font-semibold text-gray-900">{blogs.length}</p>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.2 }}
-            className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-yellow-500"
-          >
-            <div className="flex items-center">
-              <div className="p-3 rounded-full bg-yellow-500/10 text-yellow-500 mr-4">
-                <FiBookmark className="h-6 w-6" />
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-gray-500">Saved Items</h3>
-                <p className="text-2xl font-semibold text-gray-900">0</p>
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="bg-white p-6 rounded-lg shadow-sm"
-          >
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold">Your Recent Blogs</h2>
-              <Link
-                to="/create-blog"
-                className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-              >
-                Create New
-              </Link>
-            </div>
-            
-            {blogs.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-gray-500">You haven't created any blogs yet</p>
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+          {/* Blog Posts */}
+          <motion.div {...fadeIn(0.25)}>
+            <div className="bg-[#10121f] border border-white/7 rounded-2xl p-6">
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="text-white font-bold text-lg">Your Blogs</h2>
                 <Link
                   to="/create-blog"
-                  className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:opacity-90 shadow-lg shadow-indigo-500/20 transition-all duration-200"
                 >
-                  Create Your First Blog
+                  <FiPlusCircle className="w-3.5 h-3.5" />
+                  New Blog
                 </Link>
               </div>
-            ) : (
-              <div className="space-y-4">
-                {blogs.slice(0, 3).map(blog => (
-                  <div key={blog._id} className="border-b border-gray-200 pb-4 last:border-0 last:pb-0">
-                    <h3 className="font-medium text-gray-900">{blog.title}</h3>
-                    <p className="text-sm text-gray-500 mt-1 line-clamp-2">{blog.content.substring(0, 100)}...</p>
-                    <div className="mt-2 flex justify-between items-center">
-                      <span className="text-xs text-gray-400">
-                        {new Date(blog.createdAt).toLocaleDateString()}
-                      </span>
-                      <span className={`text-xs px-2 py-1 rounded-full ${
-                        blog.approved ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                      }`}>
-                        {blog.approved ? 'Published' : 'Pending Approval'}
-                      </span>
+
+              {blogs.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <div className="w-12 h-12 bg-white/4 rounded-2xl flex items-center justify-center mb-4">
+                    <FiBook className="w-6 h-6 text-slate-600" />
+                  </div>
+                  <p className="text-slate-500 text-sm mb-4">You haven't written any blogs yet.</p>
+                  <Link
+                    to="/create-blog"
+                    className="text-indigo-400 hover:text-indigo-300 text-sm font-semibold flex items-center gap-1 transition-colors"
+                  >
+                    Write your first blog <FiArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {blogs.slice(0, 4).map((blog) => (
+                    <Link key={blog._id} to={`/blogs/${blog._id}`}>
+                      <div className="flex items-start justify-between gap-3 p-3.5 rounded-xl bg-white/3 border border-white/5 hover:border-indigo-500/20 hover:bg-indigo-500/5 transition-all duration-200 group">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-slate-200 font-medium text-sm group-hover:text-indigo-300 transition-colors truncate">{blog.title}</h3>
+                          <p className="text-slate-600 text-xs mt-0.5 flex items-center gap-1">
+                            <FiClock className="w-3 h-3" />
+                            {new Date(blog.createdAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <span className={`flex-shrink-0 flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${blog.approved ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-amber-500/10 text-amber-400 border border-amber-500/20"}`}>
+                          {blog.approved ? <><FiCheckCircle className="w-2.5 h-2.5" /> Published</> : <><FiClock className="w-2.5 h-2.5" /> Pending</>}
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+                  {blogs.length > 4 && (
+                    <Link to="/blogs" className="block text-center text-indigo-400 hover:text-indigo-300 text-sm font-medium pt-2 transition-colors">
+                      View all {blogs.length} blogs →
+                    </Link>
+                  )}
+                </div>
+              )}
+            </div>
+          </motion.div>
+
+          {/* Account Settings */}
+          <motion.div {...fadeIn(0.32)}>
+            <div className="bg-[#10121f] border border-white/7 rounded-2xl p-6">
+              <h2 className="text-white font-bold text-lg mb-5">Account Info</h2>
+              <div className="space-y-3">
+                {[
+                  { label: "Full Name", value: user?.name },
+                  { label: "Email", value: user?.email },
+                  { label: "Roll Number", value: user?.rollNumber || "—" },
+                  { label: "Role", value: user?.role },
+                ].map(({ label, value }) => (
+                  <div key={label} className="flex items-center justify-between p-3.5 rounded-xl bg-white/3 border border-white/5">
+                    <div>
+                      <p className="text-slate-600 text-[10px] font-semibold uppercase tracking-wider">{label}</p>
+                      <p className="text-slate-200 font-medium text-sm mt-0.5">{value}</p>
                     </div>
                   </div>
                 ))}
-                {blogs.length > 3 && (
-                  <div className="text-center mt-4">
-                    <Link
-                      to="/blogs"
-                      className="text-sm text-primary hover:text-primary-dark font-medium"
-                    >
-                      View all your blogs
-                    </Link>
-                  </div>
+
+                {user?.role === "Admin" && (
+                  <Link
+                    to="/admin"
+                    className="flex items-center justify-between p-3.5 rounded-xl bg-amber-500/8 border border-amber-500/20 hover:bg-amber-500/12 transition-all group"
+                  >
+                    <div className="flex items-center gap-2">
+                      <FiSettings className="w-4 h-4 text-amber-400" />
+                      <span className="text-amber-300 font-semibold text-sm">Admin Panel</span>
+                    </div>
+                    <FiArrowRight className="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform" />
+                  </Link>
                 )}
               </div>
-            )}
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="bg-white p-6 rounded-lg shadow-sm"
-          >
-            <h2 className="text-xl font-semibold mb-6">Account Settings</h2>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div>
-                  <h3 className="font-medium text-gray-900">Email</h3>
-                  <p className="text-sm text-gray-500">{user?.email}</p>
-                </div>
-                <button className="text-sm text-primary hover:text-primary-dark font-medium">
-                  Change
-                </button>
-              </div>
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div>
-                  <h3 className="font-medium text-gray-900">Password</h3>
-                  <p className="text-sm text-gray-500">••••••••</p>
-                </div>
-                <button className="text-sm text-primary hover:text-primary-dark font-medium">
-                  Change
-                </button>
-              </div>
-              {user?.role === 'Admin' && (
-                <Link
-                  to="/admin"
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg group"
-                >
-                  <div className="flex items-center">
-                    <FiSettings className="mr-2 text-gray-500 group-hover:text-primary" />
-                    <h3 className="font-medium text-gray-900 group-hover:text-primary">Admin Panel</h3>
-                  </div>
-                  <span className="text-sm text-primary font-medium">Access</span>
-                </Link>
-              )}
             </div>
           </motion.div>
         </div>
       </div>
     </div>
-  )
+  );
 }

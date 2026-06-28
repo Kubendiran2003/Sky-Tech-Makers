@@ -1,127 +1,169 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { createBlog } from '../services/blogs'
-import { FiPlus, FiX } from 'react-icons/fi'
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { createBlog } from "../services/blogs";
+import { FiPlus, FiX, FiBook, FiArrowLeft, FiEdit3, FiTag } from "react-icons/fi";
+import { toast } from "react-toastify";
 
 export default function CreateBlog() {
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
-  const [tags, setTags] = useState([])
-  const [tagInput, setTagInput] = useState('')
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleAddTag = () => {
-    if (tagInput.trim() && !tags.includes(tagInput.trim())) {
-      setTags([...tags, tagInput.trim()])
-      setTagInput('')
+    const trimmed = tagInput.trim();
+    if (trimmed && !tags.includes(trimmed)) {
+      setTags([...tags, trimmed]);
+      setTagInput("");
     }
-  }
+  };
 
   const handleRemoveTag = (tagToRemove) => {
-    setTags(tags.filter(tag => tag !== tagToRemove))
-  }
+    setTags(tags.filter((tag) => tag !== tagToRemove));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    try {
-      await createBlog({ title, content, tags })
-      navigate('/dashboard')
-    } catch (error) {
-      console.error('Error creating blog:', error)
-    } finally {
-      setLoading(false)
+    e.preventDefault();
+    if (!title.trim() || !content.trim()) {
+      toast.warning("Title and content are required!");
+      return;
     }
-  }
+    setLoading(true);
+    try {
+      await createBlog({ title, content, tags });
+      toast.success("Blog post submitted successfully for approval!");
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error creating blog:", error);
+      toast.error("Failed to create blog. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="py-12 bg-gray-50">
-      <div className="container mx-auto px-4 max-w-4xl">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="mb-8"
-        >
-          <h1 className="text-3xl font-bold mb-2">Create New Blog</h1>
-          <p className="text-gray-600">Share your knowledge with the community</p>
+    <div className="min-h-screen relative overflow-hidden px-4 py-16">
+      {/* Background decoration */}
+      <div className="absolute inset-0 grid-pattern opacity-25 pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-indigo-600/8 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="relative max-w-2xl mx-auto">
+        {/* Back Link */}
+        <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
+          <Link
+            to="/dashboard"
+            className="inline-flex items-center gap-2 text-slate-500 hover:text-indigo-400 text-sm font-medium mb-8 transition-colors"
+          >
+            <FiArrowLeft className="w-4 h-4" />
+            Back to Dashboard
+          </Link>
         </motion.div>
 
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="bg-white p-6 rounded-lg shadow-sm"
+          transition={{ duration: 0.4 }}
+          className="mb-8"
         >
-          <form onSubmit={handleSubmit}>
-            <div className="mb-6">
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 mb-4">
+            <FiBook className="w-3.5 h-3.5 text-indigo-400" />
+            <span className="text-xs font-semibold text-indigo-400 uppercase tracking-wider">Community Knowledge</span>
+          </div>
+          <h1 className="text-3xl font-bold text-white">Create New Blog</h1>
+          <p className="text-slate-500 text-sm mt-1.5">Share your tech insights, tutorials, and experiences</p>
+        </motion.div>
+
+        {/* Form Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="glass-strong rounded-2xl p-6 md:p-8 shadow-2xl shadow-black/40"
+        >
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Title */}
+            <div>
+              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
                 Title
               </label>
-              <input
-                type="text"
-                id="title"
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              />
+              <div className="relative">
+                <FiEdit3 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                <input
+                  type="text"
+                  id="title"
+                  required
+                  placeholder="e.g. Mastering React Server Components"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 bg-[#131524] border border-white/8 rounded-xl text-white placeholder-slate-600 text-sm focus:outline-none focus:border-indigo-500/50 focus:bg-indigo-500/5 focus:ring-2 focus:ring-indigo-500/15 transition-all duration-200"
+                />
+              </div>
             </div>
 
-            <div className="mb-6">
-              <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
+            {/* Content */}
+            <div>
+              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
                 Content
               </label>
               <textarea
                 id="content"
                 rows={12}
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+                required
+                placeholder="Write your article content using Markdown formatting..."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                required
+                className="w-full px-4 py-3 bg-[#080b14]/50 border border-white/8 rounded-xl text-white placeholder-slate-600 text-sm focus:outline-none focus:border-indigo-500/50 focus:bg-indigo-500/5 focus:ring-2 focus:ring-indigo-500/15 transition-all duration-200 font-mono scrollbar-thin resize-y"
               />
-              <p className="mt-1 text-sm text-gray-500">Markdown formatting is supported</p>
+              <p className="mt-1.5 text-xs text-slate-600 italic">
+                Markdown formatting is fully supported (headings, lists, bold text, code snippets).
+              </p>
             </div>
 
-            <div className="mb-8">
-              <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-1">
+            {/* Tags */}
+            <div>
+              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
                 Tags
               </label>
-              <div className="flex">
-                <input
-                  type="text"
-                  id="tags"
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
-                  placeholder="Add a tag..."
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
-                />
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <FiTag className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                  <input
+                    type="text"
+                    id="tags"
+                    placeholder="e.g. react, node, tutorials"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddTag())}
+                    className="w-full pl-10 pr-4 py-3 bg-[#131524] border border-white/8 rounded-xl text-white placeholder-slate-600 text-sm focus:outline-none focus:border-indigo-500/50 focus:bg-indigo-500/5 focus:ring-2 focus:ring-indigo-500/15 transition-all duration-200"
+                  />
+                </div>
                 <button
                   type="button"
                   onClick={handleAddTag}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-r-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                  className="flex items-center justify-center px-4 py-3 rounded-xl text-sm font-bold text-white bg-indigo-500/10 border border-indigo-500/20 hover:bg-indigo-500/20 hover:border-indigo-500/30 transition-all duration-200"
                 >
-                  <FiPlus className="h-4 w-4" />
+                  <FiPlus className="w-4 h-4" />
                 </button>
               </div>
-              
+
               {tags.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {tags.map(tag => (
+                <div className="mt-3.5 flex flex-wrap gap-2">
+                  {tags.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                      className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase tracking-wider"
                     >
                       {tag}
                       <button
                         type="button"
                         onClick={() => handleRemoveTag(tag)}
-                        className="ml-1.5 inline-flex text-gray-400 hover:text-gray-500"
+                        className="text-slate-400 hover:text-indigo-400 transition-colors ml-1.5"
                       >
-                        <FiX className="h-3 w-3" />
+                        <FiX className="w-3.5 h-3.5" />
                       </button>
                     </span>
                   ))}
@@ -129,20 +171,32 @@ export default function CreateBlog() {
               )}
             </div>
 
-            <div className="flex justify-end">
-              <button
+            {/* Submit */}
+            <div className="pt-4 border-t border-white/5 flex justify-end">
+              <motion.button
                 type="submit"
                 disabled={loading}
-                className={`inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary ${
-                  loading ? 'opacity-70 cursor-not-allowed' : ''
-                }`}
+                whileHover={{ scale: loading ? 1 : 1.01 }}
+                whileTap={{ scale: loading ? 1 : 0.99 }}
+                className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-lg shadow-indigo-500/25 transition-all duration-300 ${loading ? "opacity-60 cursor-not-allowed" : ""
+                  }`}
               >
-                {loading ? 'Publishing...' : 'Publish Blog'}
-              </button>
+                {loading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Publishing...
+                  </>
+                ) : (
+                  <>
+                    <FiBook className="w-4 h-4" />
+                    Publish Blog
+                  </>
+                )}
+              </motion.button>
             </div>
           </form>
         </motion.div>
       </div>
     </div>
-  )
+  );
 }

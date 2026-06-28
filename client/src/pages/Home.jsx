@@ -279,37 +279,41 @@ const Home = () => {
   }, [team.length]);
 
   return (
-    <div className="bg-white min-h-screen">
-      {/* Hero Section */}
-      <section className="pt-14 pb-20 bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200/30 rounded-full blur-3xl animate-pulse"></div>
-          <div
-            className="absolute bottom-20 right-10 w-96 h-96 bg-purple-200/30 rounded-full blur-3xl animate-pulse"
-            style={{ animationDelay: "2s" }}
-          ></div>
-        </div>
+    <div className="bg-[#050508] min-h-screen text-slate-100 relative overflow-hidden">
+      {/* Grid Pattern Background */}
+      <div className="absolute inset-0 grid-pattern opacity-25 pointer-events-none" />
+      
+      {/* Background Orbs */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-indigo-600/10 rounded-full blur-3xl animate-pulse"></div>
+        <div
+          className="absolute bottom-20 right-10 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl animate-pulse"
+          style={{ animationDelay: "2s" }}
+        ></div>
+      </div>
 
-        <div className="container mx-auto px-4 text-center relative z-10">
+      {/* Hero Section */}
+      <section className="pt-20 pb-20 relative z-10">
+        <div className="container mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto"
           >
-            <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-8">
-              <Zap className="h-4 w-4 mr-2" />
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-full text-sm font-medium mb-8">
+              <Zap className="h-4 w-4 text-indigo-400" />
               Join 15,000+ developers accelerating their careers
             </div>
 
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+              <span className="bg-gradient-to-r from-indigo-400 to-violet-500 bg-clip-text text-transparent">
                 {text}
               </span>
               <Cursor cursorStyle="|" />
             </h1>
 
-            <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-slate-400 mb-12 max-w-3xl mx-auto leading-relaxed">
               Master technical interviews, learn from industry experts, and join
               an elite community of developers who land jobs at top tech
               companies.
@@ -318,14 +322,14 @@ const Home = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
               <Link
                 to={user ? "/dashboard" : "/register"}
-                className="group inline-flex items-center px-8 py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                className="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl font-semibold hover:from-indigo-500 hover:to-violet-500 shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:scale-105"
               >
                 {user ? "Go to Dashboard" : "Start Learning Free"}
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 to="/blogs"
-                className="inline-flex items-center px-8 py-4 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:border-blue-600 hover:text-blue-600 transition-all duration-300"
+                className="inline-flex items-center px-8 py-4 border-2 border-white/10 text-slate-300 rounded-xl font-semibold hover:border-indigo-500/50 hover:text-indigo-400 transition-all duration-300"
               >
                 Explore Blogs
                 <Book className="ml-2 h-5 w-5" />
@@ -333,22 +337,22 @@ const Home = () => {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
               {stats.map((stat, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="text-center"
+                  className="bg-[#10121f]/40 border border-white/5 p-5 rounded-2xl text-center shadow-lg"
                 >
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-white rounded-xl shadow-md mb-4">
-                    <stat.icon className="h-6 w-6 text-blue-600" />
+                  <div className="inline-flex items-center justify-center w-11 h-11 bg-indigo-500/10 border border-indigo-500/20 rounded-xl mb-4">
+                    <stat.icon className="h-5 w-5 text-indigo-400" />
                   </div>
-                  <div className="text-3xl font-bold text-gray-900 mb-2">
+                  <div className="text-3xl font-bold text-white mb-1">
                     {stat.number}
                   </div>
-                  <div className="text-gray-600 text-sm">{stat.label}</div>
+                  <div className="text-slate-500 text-xs font-semibold uppercase tracking-wider">{stat.label}</div>
                 </motion.div>
               ))}
             </div>
@@ -357,7 +361,7 @@ const Home = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white">
+      <section className="py-24 bg-transparent border-t border-white/5 relative z-10">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -366,10 +370,10 @@ const Home = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Everything You Need to Excel
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Everything You Need to <span className="gradient-text">Excel</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg text-slate-400 max-w-3xl mx-auto">
               From interview preparation to advanced learning resources, we've
               got your entire tech journey covered.
             </p>
@@ -383,25 +387,25 @@ const Home = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="group relative bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100"
+                className="group bg-[#10121f] border border-white/7 rounded-2xl p-8 shadow-xl transition-all duration-300 hover:border-indigo-500/20 hover:bg-[#141729] hover:-translate-y-1.5"
               >
                 <div
-                  className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300`}
+                  className={`inline-flex items-center justify-center w-14 h-14 bg-gradient-to-r ${feature.color} rounded-2xl mb-6 shadow-lg group-hover:scale-105 transition-transform duration-300`}
                 >
-                  <feature.icon className="h-8 w-8 text-white" />
+                  <feature.icon className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                <h3 className="text-xl font-bold text-white mb-3">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 mb-6 leading-relaxed">
+                <p className="text-slate-400 text-sm leading-relaxed mb-6">
                   {feature.description}
                 </p>
                 <Link
                   to={feature.link}
-                  className="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-colors group-hover:translate-x-1"
+                  className="inline-flex items-center text-indigo-400 font-semibold hover:text-indigo-300 transition-colors group-hover:gap-1.5 gap-1 transition-all duration-200"
                 >
                   Explore Now
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
               </motion.div>
             ))}
@@ -410,7 +414,7 @@ const Home = () => {
       </section>
 
       {/* About Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-24 bg-[#0d0f1a]/40 border-t border-white/5 relative z-10">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -420,16 +424,16 @@ const Home = () => {
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
               >
-                <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-6">
-                  <Target className="h-4 w-4 mr-2" />
+                <div className="inline-flex items-center px-4 py-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-full text-xs font-semibold mb-6 uppercase tracking-wider">
+                  <Target className="h-4 w-4 mr-2 text-indigo-400" />
                   Our Mission
                 </div>
 
-                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
                   Empowering Developers to Reach New Heights
                 </h2>
 
-                <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                <p className="text-base text-slate-400 mb-8 leading-relaxed">
                   We believe every developer deserves access to world-class
                   learning resources and a supportive community. Our platform
                   bridges the gap between learning and landing your dream job.
@@ -445,15 +449,15 @@ const Home = () => {
                       viewport={{ once: true }}
                       className="flex items-center space-x-3"
                     >
-                      <achievement.icon className="h-6 w-6 text-green-600" />
-                      <span className="text-gray-700">{achievement.text}</span>
+                      <achievement.icon className="h-5 w-5 text-indigo-400 flex-shrink-0" />
+                      <span className="text-slate-300 text-sm">{achievement.text}</span>
                     </motion.div>
                   ))}
                 </div>
 
                 <Link
-                  to="/"
-                  className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                  to="/register"
+                  className="inline-flex items-center px-6 py-3.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl font-semibold hover:opacity-90 shadow-lg transition-all"
                 >
                   Learn More About Us
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -471,21 +475,21 @@ const Home = () => {
                   <img
                     src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
                     alt="Developers collaborating"
-                    className="w-full h-96 object-cover rounded-2xl shadow-2xl"
+                    className="w-full h-[400px] object-cover rounded-2xl border border-white/8 shadow-2xl"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-2xl"></div>
                 </div>
 
-                <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-xl border">
+                <div className="absolute -bottom-6 -left-6 bg-[#10121f] border border-white/8 p-6 rounded-xl shadow-2xl">
                   <div className="flex items-center space-x-3">
-                    <div className="bg-green-100 p-2 rounded-lg">
-                      <Coffee className="h-6 w-6 text-green-600" />
+                    <div className="bg-indigo-500/10 p-2.5 rounded-lg border border-indigo-500/20">
+                      <Coffee className="h-5 w-5 text-indigo-400" />
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900">
+                      <div className="font-bold text-white text-sm">
                         24/7 Learning
                       </div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-xs text-slate-500">
                         Always Available
                       </div>
                     </div>
@@ -498,12 +502,7 @@ const Home = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-10 left-10 w-72 h-72 bg-white/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
-        </div>
-
+      <section className="py-24 bg-transparent border-t border-white/5 relative overflow-hidden z-10">
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -512,60 +511,59 @@ const Home = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Success Stories from Our Community
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Success Stories from Our <span className="gradient-text">Community</span>
             </h2>
-            <p className="text-xl text-blue-200 max-w-3xl mx-auto">
-              Join thousands of developers who transformed their careers with
-              Sky Tech Makers.
+            <p className="text-lg text-slate-400 max-w-3xl mx-auto">
+              Join thousands of developers who transformed their careers with Sky Tech Makers.
             </p>
           </motion.div>
 
-          <div className="relative max-w-4xl mx-auto">
+          <div className="relative max-w-3xl mx-auto px-4">
             <div className="overflow-hidden rounded-2xl">
               <motion.div
                 key={currentTestimonial}
-                initial={{ opacity: 0, x: 100 }}
+                initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -100 }}
-                transition={{ duration: 0.7, ease: "easeInOut" }}
-                className="bg-white/10 backdrop-blur-lg p-8 md:p-12 rounded-2xl border border-white/20"
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className="bg-[#10121f] border border-white/8 p-8 md:p-10 rounded-2xl shadow-xl"
               >
-                <div className="flex items-center mb-6">
+                <div className="flex items-center mb-5">
                   {[...Array(testimonials[currentTestimonial].rating)].map(
                     (_, i) => (
                       <Star
                         key={i}
-                        className="h-6 w-6 text-yellow-400 fill-current"
+                        className="h-5 w-5 text-amber-400 fill-current"
                       />
                     )
                   )}
                 </div>
 
-                <blockquote className="text-xl md:text-2xl text-blue-100 mb-8 leading-relaxed font-medium">
+                <blockquote className="text-lg md:text-xl text-slate-300 mb-8 leading-relaxed font-medium italic">
                   "{testimonials[currentTestimonial].content}"
                 </blockquote>
 
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-center">
                     <img
                       src={testimonials[currentTestimonial].avatar}
                       alt={testimonials[currentTestimonial].name}
-                      className="h-16 w-16 rounded-full object-cover mr-4 border-2 border-white/20"
+                      className="h-12 w-12 rounded-full object-cover mr-3 border border-white/10"
                     />
                     <div>
-                      <div className="font-semibold text-white text-lg">
+                      <div className="font-bold text-white text-base">
                         {testimonials[currentTestimonial].name}
                       </div>
-                      <div className="text-blue-300">
+                      <div className="text-slate-500 text-xs font-medium">
                         {testimonials[currentTestimonial].role}
                       </div>
                     </div>
                   </div>
 
-                  <div className="text-right">
-                    <div className="text-sm text-blue-300 mb-1">Now at</div>
-                    <div className="font-semibold text-white">
+                  <div className="sm:text-right border-t border-white/5 sm:border-0 pt-3 sm:pt-0">
+                    <div className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold mb-0.5">Now at</div>
+                    <div className="font-bold text-white text-sm">
                       {testimonials[currentTestimonial].company}
                     </div>
                   </div>
@@ -576,15 +574,15 @@ const Home = () => {
             {/* Navigation */}
             <button
               onClick={prevTestimonial}
-              className="hidden lg:flex absolute left-[-60px] top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 p-3 rounded-full transition-all duration-300 backdrop-blur-sm"
+              className="hidden lg:flex absolute left-[-60px] top-1/2 -translate-y-1/2 bg-white/5 border border-white/15 hover:bg-white/10 hover:text-white p-3 rounded-full transition-all duration-300 backdrop-blur-sm text-slate-400"
             >
-              <ChevronLeft className="h-6 w-6" />
+              <ChevronLeft className="h-5 w-5" />
             </button>
             <button
               onClick={nextTestimonial}
-              className="hidden lg:flex absolute right-[-60px] top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 p-3 rounded-full transition-all duration-300 backdrop-blur-sm"
+              className="hidden lg:flex absolute right-[-60px] top-1/2 -translate-y-1/2 bg-white/5 border border-white/15 hover:bg-white/10 hover:text-white p-3 rounded-full transition-all duration-300 backdrop-blur-sm text-slate-400"
             >
-              <ChevronRight className="h-6 w-6" />
+              <ChevronRight className="h-5 w-5" />
             </button>
 
             {/* Dots indicator */}
@@ -593,10 +591,10 @@ const Home = () => {
                 <button
                   key={index}
                   onClick={() => setCurrentTestimonial(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                     index === currentTestimonial
-                      ? "bg-white scale-125"
-                      : "bg-white/30 hover:bg-white/50"
+                      ? "bg-indigo-500 scale-125 shadow-lg shadow-indigo-500/50"
+                      : "bg-white/10 hover:bg-white/20"
                   }`}
                 />
               ))}
@@ -606,127 +604,82 @@ const Home = () => {
       </section>
 
       {/* Course Section */}
-      <section className="container mt-16 mb-28 px-4">
-        <h2 className="text-3xl md:text-5xl font-bold text-center leading-snug mb-4">
-          Our Featured Courses
-        </h2>
-        <p className="text-lg text-center max-w-4xl mx-auto text-gray-600">
-          Explore high-quality, beginner-friendly tech tutorials in Tamil. Learn
-          at your pace from real-world projects and hands-on explanations.
-        </p>
+      <section className="container mx-auto mt-20 mb-28 px-4 relative z-10">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 mb-4">
+            <Zap className="w-3.5 h-3.5 text-indigo-400" />
+            <span className="text-xs font-semibold text-indigo-400 uppercase tracking-wider">Premium Content</span>
+          </div>
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
+            Our Featured <span className="gradient-text">Courses</span>
+          </h2>
+          <p className="text-slate-400 text-base max-w-2xl mx-auto leading-relaxed">
+            Explore high-quality, beginner-friendly tech tutorials in Tamil. Learn at your own pace with hands-on projects and step-by-step guidance.
+          </p>
+        </div>
 
-        <ul className="mt-10 flex flex-wrap justify-center gap-6">
+        <div className="flex flex-wrap justify-center gap-6 mt-10">
           {courses.map((course, index) => (
-            <li
+            <div
               key={index}
-              className=" rounded-xl border max-w-xs w-full shadow hover:shadow-lg transition duration-300"
+              className="bg-[#10121f] border border-white/7 rounded-2xl max-w-xs w-full shadow-xl shadow-black/30 hover:border-indigo-500/30 hover:shadow-indigo-500/5 transition-all duration-300 overflow-hidden flex flex-col group"
             >
-              <div
-                className={`${course.color} border p-4 rounded-lg h-80 flex flex-col justify-between`}
-              >
+              <div className="p-6 h-[420px] flex flex-col justify-between">
                 <div>
-                  <p className="flex justify-between items-center">
-                    <span
-                      className={`text-sm bg-green-300 px-3 py-1 rounded-full ${course.badgeColor} w-fit`}
-                    >
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-green-500/10 text-green-400 border border-green-500/20 uppercase tracking-wider">
                       {course.level}
                     </span>
                     <img
                       src={course.image}
-                      alt="course"
-                      className="w-8 h-8 rounded-full object-contain"
+                      alt="course icon"
+                      className="w-8 h-8 rounded-lg object-contain bg-white/5 p-1 flex-shrink-0"
                     />
-                  </p>
-                  <h2 className="mt-4 text-lg font-semibold text-black">
+                  </div>
+
+                  <h3 className="text-lg font-bold text-white mt-2 group-hover:text-indigo-300 transition-colors leading-snug">
                     {course.title}
-                  </h2>
-                  <p className="text-gray-800 mt-2 text-sm">
+                  </h3>
+                  
+                  <p className="text-slate-400 mt-2 text-xs leading-relaxed line-clamp-3">
                     {course.description}
                   </p>
-                  <ul className="mt-3 flex flex-wrap gap-2 text-xs">
-                    <li className="border p-2 rounded-xl bg-gray-50 border-gray-200">
-                      {course.duration} ⏱
-                    </li>
-                    <li className="border p-2 rounded-xl bg-gray-50 border-gray-200">
-                      {course.likes} ❤️
-                    </li>
-                    <li className="border p-2 rounded-xl bg-gray-50 border-gray-200">
-                      {course.topics} 📚
-                    </li>
-                    <li className="border p-2 rounded-xl bg-gray-50 border-gray-200">
-                      {course.project} 👨🏻‍💻
-                    </li>
-                    <li className="border p-2 rounded-xl bg-gray-50 border-gray-200">
-                      {course.uploadDate} 🗓️
-                    </li>
-                  </ul>
+
+                  <div className="mt-4 flex flex-wrap gap-1.5">
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-white/3 border border-white/5 text-[10px] text-slate-400 font-medium">
+                      ⏱ {course.duration.replace(" Duration", "")}
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-white/3 border border-white/5 text-[10px] text-slate-400 font-medium">
+                      ❤️ {course.likes.replace(" Likes", "")}
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-white/3 border border-white/5 text-[10px] text-slate-400 font-medium">
+                      📚 {course.topics.replace(" Topics", "")}
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-white/3 border border-white/5 text-[10px] text-slate-400 font-medium">
+                      👨🏻‍💻 {course.project}
+                    </span>
+                  </div>
                 </div>
-                <div className="mt-12 flex justify-center">
+
+                <div className="mt-6">
                   <a
                     href={course.video}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 border border-black text-black rounded-lg text-sm font-semibold hover:bg-black hover:text-white transition"
+                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-lg shadow-indigo-500/25 transition-all duration-300"
                   >
+                    <ArrowRight className="w-3.5 h-3.5 order-last group-hover:translate-x-0.5 transition-transform" />
                     Explore Video
                   </a>
                 </div>
               </div>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       </section>
 
-      {/* CTA Section */}
-      {!user && (
-        <section className="py-20 bg-gradient-to-r from-gray-900 to-blue-900 text-white">
-          <div className="container mx-auto px-4 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                Ready to Transform Your Tech Career?
-              </h2>
-              <p className="text-xl mb-8 max-w-3xl mx-auto text-gray-300">
-                Join our elite community of developers and get access to premium
-                content, exclusive tools, and networking opportunities that will
-                accelerate your growth.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Link
-                  to="/register"
-                  className="group inline-flex items-center px-8 py-4 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 hover:scale-105 shadow-lg"
-                >
-                  Start Your Journey Free
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <Link
-                  to="/login"
-                  className="inline-flex items-center px-8 py-4 border-2 border-gray-500 text-gray-300 rounded-lg font-semibold hover:bg-gray-800 transition-all duration-300"
-                >
-                  Sign In
-                </Link>
-              </div>
-
-              <div className="mt-8 text-sm text-gray-400">
-                Trusted by 15,000+ developers worldwide
-              </div>
-            </motion.div>
-          </div>
-        </section>
-      )}
-
-      {/* About Section */}
-      <section className="py-20 bg-white text-black relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-10 left-10 w-72 h-72 bg-blue-100 rounded-full blur-3xl opacity-40"></div>
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-200 rounded-full blur-3xl opacity-30"></div>
-        </div>
-
+      {/* Team Section */}
+      <section className="py-24 bg-[#0d0f1a]/40 border-t border-white/5 relative overflow-hidden z-10">
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -735,42 +688,42 @@ const Home = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-blue-900">
-              Meet Our Team
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Meet Our <span className="gradient-text">Team</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg text-slate-400 max-w-3xl mx-auto">
               The passionate minds behind{" "}
-              <span className="font-semibold text-blue-500">
+              <span className="font-semibold text-indigo-400">
                 Sky Tech Makers
               </span>
               .
             </p>
           </motion.div>
 
-          <div className="relative max-w-5xl mx-auto">
+          <div className="relative max-w-4xl mx-auto px-4">
             <motion.div
               key={currentMember}
-              initial={{ opacity: 0, x: 100 }}
+              initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -100 }}
-              transition={{ duration: 0.7, ease: "easeInOut" }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
               className={`flex flex-col ${
                 team[currentMember].flip ? "md:flex-row-reverse" : "md:flex-row"
-              } items-center gap-10 bg-gradient-to-br from-blue-50 via-purple-50 to-white shadow-xl p-8 md:p-12 rounded-2xl border border-blue-100`}
+              } items-center gap-10 bg-[#10121f] border border-white/8 shadow-2xl p-8 md:p-12 rounded-2xl`}
             >
               <img
                 src={team[currentMember].image}
                 alt={team[currentMember].name}
-                className="w-40 h-40 rounded-full object-cover border-4 border-blue-200 shadow-lg"
+                className="w-36 h-36 rounded-full object-cover border-4 border-indigo-500/20 shadow-xl flex-shrink-0"
               />
-              <div>
-                <h3 className="text-2xl text-blue-700 font-bold">
+              <div className="text-left">
+                <h3 className="text-2xl text-white font-extrabold">
                   {team[currentMember].name}
                 </h3>
-                <p className="text-sm text-purple-800 font-medium">
+                <p className="text-sm text-indigo-400 font-semibold uppercase tracking-wider mt-1">
                   {team[currentMember].role}
                 </p>
-                <p className="mt-4 text-gray-700 leading-relaxed">
+                <p className="mt-4 text-slate-400 text-sm leading-relaxed">
                   {team[currentMember].description}
                 </p>
               </div>
@@ -782,10 +735,10 @@ const Home = () => {
                 <button
                   key={index}
                   onClick={() => setCurrentMember(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                     index === currentMember
-                      ? "bg-blue-500 scale-125"
-                      : "bg-blue-300 hover:bg-blue-500"
+                      ? "bg-indigo-500 scale-125 shadow-lg shadow-indigo-500/50"
+                      : "bg-white/10 hover:bg-white/20"
                   }`}
                 />
               ))}
@@ -793,6 +746,49 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* CTA Section */}
+      {!user && (
+        <section className="py-24 bg-gradient-to-b from-[#050508] to-[#0d0f1a] border-t border-white/5 relative z-10">
+          <div className="container mx-auto px-4 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                Ready to Transform Your Tech Career?
+              </h2>
+              <p className="text-lg mb-8 max-w-3xl mx-auto text-slate-400 leading-relaxed">
+                Join our elite community of developers and get access to premium
+                content, exclusive tools, and networking opportunities that will
+                accelerate your growth.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link
+                  to="/register"
+                  className="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl font-bold hover:from-indigo-500 hover:to-violet-500 shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:scale-105"
+                >
+                  Start Your Journey Free
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link
+                  to="/login"
+                  className="inline-flex items-center px-8 py-4 border-2 border-white/10 text-slate-300 rounded-xl font-semibold hover:border-indigo-500/50 hover:text-indigo-400 transition-all duration-300"
+                >
+                  Sign In
+                </Link>
+              </div>
+
+              <div className="mt-8 text-xs text-slate-500 uppercase tracking-widest font-semibold">
+                Trusted by 15,000+ developers worldwide
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
     </div>
   );
 };

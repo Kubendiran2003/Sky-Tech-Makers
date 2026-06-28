@@ -1,113 +1,148 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
-  FiMail,
-  FiMapPin,
-  FiPhone,
-  FiGithub,
-  FiYoutube,
-  FiInstagram,
+  FiMail, FiMapPin, FiPhone, FiGithub, FiYoutube, FiInstagram,
+  FiZap, FiArrowRight, FiHeart,
 } from "react-icons/fi";
+
+const footerLinks = [
+  { label: "Blogs", to: "/blogs" },
+  { label: "Interview Q&A", to: "/questions" },
+  { label: "Developer Tools", to: "/tools" },
+  { label: "Leaderboard", to: "/leaderboard" },
+  { label: "Join Us", to: "/register" },
+];
+
+const socials = [
+  {
+    icon: FiYoutube,
+    href: "https://www.youtube.com/@SkyTechMakers",
+    label: "YouTube",
+    color: "hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/25",
+  },
+  {
+    icon: FiInstagram,
+    href: "https://www.instagram.com/skytechmakers/",
+    label: "Instagram",
+    color: "hover:text-pink-400 hover:bg-pink-500/10 hover:border-pink-500/25",
+  },
+  {
+    icon: FiGithub,
+    href: "https://github.com/skytechmakers",
+    label: "GitHub",
+    color: "hover:text-white hover:bg-white/10 hover:border-white/20",
+  },
+];
 
 export default function Footer() {
   return (
-    <motion.footer
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="bg-dark text-white py-10"
-    >
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          {/* Branding */}
-          <div>
-            <h3 className="text-2xl font-bold mb-2">Sky Tech Makers</h3>
-            <p className="text-gray-300">
-              Your hub for tech knowledge and resources.
+    <footer className="relative bg-[#080b14] border-t border-white/6 overflow-hidden">
+      {/* Gradient top accent */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent" />
+
+      {/* Background orbs */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-indigo-600/5 rounded-full blur-3xl" />
+        <div className="absolute top-0 right-1/4 w-80 h-80 bg-violet-600/5 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+
+          {/* Brand */}
+          <div className="lg:col-span-1">
+            <Link to="/" className="flex items-center gap-2.5 group mb-4 w-fit">
+              <div className="w-9 h-9 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:shadow-indigo-500/50 transition-all duration-300">
+                <FiZap className="text-white w-5 h-5" />
+              </div>
+              <span className="text-lg font-bold text-white">
+                Sky Tech <span className="gradient-text">Makers</span>
+              </span>
+            </Link>
+            <p className="text-slate-500 text-sm leading-relaxed mb-5">
+              Your ultimate hub for tech knowledge, coding challenges, interview prep, and developer resources.
             </p>
+            <div className="flex gap-2">
+              {socials.map(({ icon: Icon, href, label, color }) => (
+                <motion.a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`w-9 h-9 flex items-center justify-center rounded-lg border border-white/8 bg-white/4 text-slate-400 transition-all duration-200 ${color}`}
+                >
+                  <Icon className="w-4 h-4" />
+                </motion.a>
+              ))}
+            </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-semibold mb-2">Quick Links</h4>
-            <ul className="space-y-1 text-gray-300">
-              <li>
-                <Link to="/blogs" className="hover:text-white">
-                  Blogs
-                </Link>
+            <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-5">Quick Links</h4>
+            <ul className="space-y-2.5">
+              {footerLinks.map(({ to, label }) => (
+                <li key={to}>
+                  <Link
+                    to={to}
+                    className="group flex items-center gap-2 text-sm text-slate-500 hover:text-indigo-400 transition-colors duration-200"
+                  >
+                    <FiArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-200 flex-shrink-0" />
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-5">Contact</h4>
+            <ul className="space-y-3">
+              <li className="flex items-start gap-3 text-sm text-slate-500">
+                <FiMapPin className="w-4 h-4 text-indigo-400 mt-0.5 flex-shrink-0" />
+                <span>Tamil Nadu, India</span>
               </li>
-              <li>
-                <Link to="/questions" className="hover:text-white">
-                  Interview Q&A
-                </Link>
+              <li className="flex items-start gap-3 text-sm text-slate-500">
+                <FiMail className="w-4 h-4 text-indigo-400 mt-0.5 flex-shrink-0" />
+                <a href="mailto:skytechmakers@gmail.com" className="hover:text-indigo-400 transition-colors">
+                  skytechmakers@gmail.com
+                </a>
               </li>
-              <li>
-                <Link to="/tools" className="hover:text-white">
-                  Developer Tools
-                </Link>
-              </li>
-              <li>
-                <Link to="/register" className="hover:text-white">
-                  Join Us
-                </Link>
+              <li className="flex items-start gap-3 text-sm text-slate-500">
+                <FiPhone className="w-4 h-4 text-indigo-400 mt-0.5 flex-shrink-0" />
+                <span>+91 98765 43210</span>
               </li>
             </ul>
           </div>
 
-          {/* Contact Info */}
+          {/* Newsletter / CTA */}
           <div>
-            <h4 className="text-lg font-semibold mb-2">Contact</h4>
-            <ul className="space-y-2 text-gray-300">
-              <li className="flex items-center gap-2">
-                <FiMapPin /> Tamil Nadu, India
-              </li>
-              <li className="flex items-center gap-2">
-                <FiMail /> skytechmakers@gmail.com
-              </li>
-              <li className="flex items-center gap-2">
-                <FiPhone /> +91 98765 43210
-              </li>
-            </ul>
-          </div>
-
-          {/* Social Media */}
-          <div>
-            <h4 className="text-lg font-semibold mb-2">Follow Us</h4>
-            <div className="flex space-x-4 text-gray-300 text-xl">
-              <a
-                href="https://github.com/yourprofile"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white"
-              >
-                <FiGithub />
-              </a>
-              <a
-                href="https://l.instagram.com/?u=https%3A%2F%2Fwww.youtube.com%2F%40SkyTechMakers%3Ffbclid%3DPAZXh0bgNhZW0CMTEAAaeyFZQEvJRlYkSSThFZTqBdav9xbLVl_jjVjrbSbYNvQOMnw-A9ZF6mCBshqA_aem_mR9v5bL0usEq6mZZRiVHOg&e=AT0QIdnOFeKcji4oIPmjND2kuABbLcfiTZN6N0-Q7ZZ7ZyAMTxPSDWM-wsDiDPxsYFHby1Mtay8wTXHmvBg0YdoSnvKO2ZSAsGql1Q"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white"
-              >
-                <FiYoutube />
-              </a>
-              <a
-                href="https://www.youtube.com/redirect?event=channel_header&redir_token=QUFFLUhqbnlMcDVHYUxBMmhvTmF2ZlIzakZwOWFoUFZTd3xBQ3Jtc0tsQ2sxcFEzcEx3RFZkSVNhMDV4Tk9iV2FCMFRHejlHMjdocXo1TGVTV0c4MUtiMlFKREo0VFV6X0JWR2RzLUZ1cS1fRXpIZHREWjNnUUFWc3NuQmNDQUJMN1J2S1YyUnRUYmxNc1BJalVCckxjUE5ZMA&q=https%3A%2F%2Fwww.instagram.com%2Fskytechmakers%2F%3Fhl%3Den"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white"
-              >
-                <FiInstagram />
-              </a>
-            </div>
+            <h4 className="text-sm font-bold text-white uppercase tracking-widest mb-5">Stay Updated</h4>
+            <p className="text-slate-500 text-sm mb-4">Join thousands learning tech with us every day.</p>
+            <Link
+              to="/register"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 transition-all duration-300"
+            >
+              <FiZap className="w-3.5 h-3.5" />
+              Start Learning Free
+            </Link>
           </div>
         </div>
 
-        <div className="pt-6 border-t border-gray-700 text-center text-gray-400">
-          <p>
+        {/* Bottom bar */}
+        <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-slate-600 text-xs">
             © {new Date().getFullYear()} Sky Tech Makers. All rights reserved.
+          </p>
+          <p className="text-slate-600 text-xs flex items-center gap-1.5">
+            Made with <FiHeart className="w-3 h-3 text-red-500 fill-current" /> in Tamil Nadu
           </p>
         </div>
       </div>
-    </motion.footer>
+    </footer>
   );
 }

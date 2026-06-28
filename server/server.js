@@ -9,6 +9,7 @@ const authRoutes = require("./routes/authRoutes");
 const blogRoutes = require("./routes/blogRoutes");
 const questionRoutes = require("./routes/questionRoutes");
 const toolRoutes = require("./routes/toolRoutes");
+const challengeRoutes = require("./routes/challengeRoutes");
 
 dotenv.config();
 const app = express();
@@ -31,6 +32,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/questions", questionRoutes);
 app.use("/api/tools", toolRoutes);
+app.use("/api/challenges", challengeRoutes);
 
 // ✅ Connect DB and Start Server
 mongoose.connect(process.env.MONGO_URI).then(() => {
