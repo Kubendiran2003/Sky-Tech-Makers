@@ -15,12 +15,26 @@ dotenv.config();
 const app = express();
 
 // ✅ CORS Middleware
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://sky-tech-makers.netlify.app",
+  "https://sky-tech-makers.onrender.com"
+];
+
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://sky-tech-makers.netlify.app",
-    "https://sky-tech-makers.onrender.com"
-  ],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, curl, postman)
+    if (!origin) return callback(null, true);
+    
+    const isAllowed = allowedOrigins.includes(origin) || 
+                      origin.endsWith(".netlify.app");
+                      
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true
 }));
 
