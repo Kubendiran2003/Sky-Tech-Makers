@@ -43,7 +43,11 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  res.cookie("token", "", { maxAge: 1 }).json({ msg: "Logged out" });
+  res.cookie("token", "", {
+    maxAge: 1,
+    sameSite: "None",
+    secure: true,
+  }).json({ msg: "Logged out" });
 };
 
 exports.getProfile = (req, res) => {

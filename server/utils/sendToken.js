@@ -11,8 +11,8 @@ const sendToken = (user, res) => {
   res.cookie("token", token, {
     httpOnly: true,
     maxAge: process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000,
-    sameSite: "Lax",
-    secure: false,
+    sameSite: "None",
+    secure: true,
   });
 
   res.json({ success: true, user });

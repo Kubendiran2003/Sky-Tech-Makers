@@ -18,7 +18,8 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://sky-tech-makers.netlify.app"
+    "https://sky-tech-makers.netlify.app",
+    "https://sky-tech-makers.onrender.com"
   ],
   credentials: true
 }));

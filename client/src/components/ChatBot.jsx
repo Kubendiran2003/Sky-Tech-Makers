@@ -92,7 +92,7 @@ export default function ChatBot() {
           <FiX className="w-6 h-6 text-white" />
         ) : (
           <img
-            src="/src/assets/ChatBot-Robot-1.gif"
+            src="/ChatBot-Robot-1.gif"
             alt="Robot"
             className="w-12 h-12 sm:w-16 sm:h-16"
           />
