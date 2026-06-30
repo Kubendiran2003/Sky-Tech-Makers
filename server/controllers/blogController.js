@@ -38,3 +38,13 @@ exports.getPendingBlogs = async (req, res) => {
   const pendingBlogs = await Blog.find({ approved: false }).populate("author", "name");
   res.json(pendingBlogs);
 };
+
+exports.getMyBlogs = async (req, res) => {
+  try {
+    const blogs = await Blog.find({ author: req.user._id });
+    res.json(blogs);
+  } catch (error) {
+    console.error("Error fetching user blogs:", error);
+    res.status(500).json({ message: "Server error fetching user blogs" });
+  }
+};

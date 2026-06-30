@@ -54,11 +54,11 @@ export default function CreateBlog() {
         {/* Back Link */}
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
           <Link
-            to="/dashboard"
+            to="/blogs"
             className="inline-flex items-center gap-2 text-slate-500 hover:text-indigo-400 text-sm font-medium mb-8 transition-colors"
           >
             <FiArrowLeft className="w-4 h-4" />
-            Back to Dashboard
+            Back to Blogs
           </Link>
         </motion.div>
 
@@ -87,14 +87,14 @@ export default function CreateBlog() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Title */}
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              <label htmlFor="blog-title" className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
                 Title
               </label>
               <div className="relative">
                 <FiEdit3 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
                 <input
                   type="text"
-                  id="title"
+                  id="blog-title"
                   required
                   placeholder="e.g. Mastering React Server Components"
                   value={title}

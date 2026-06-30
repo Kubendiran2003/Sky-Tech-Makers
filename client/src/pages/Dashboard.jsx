@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { getProfile } from "../services/auth";
-import { getBlogs } from "../services/blogs";
+import { getMyBlogs } from "../services/blogs";
 import { getMyQuestions } from "../services/questions";
 import {
   FiBook, FiUser, FiSettings, FiPlusCircle,
@@ -26,11 +26,11 @@ export default function Dashboard() {
       try {
         const [profileData, blogsData, questionsData] = await Promise.all([
           getProfile(),
-          getBlogs(),
+          getMyBlogs(),
           getMyQuestions(),
         ]);
         setUser(profileData);
-        setBlogs(blogsData.filter((blog) => blog.author?._id === profileData._id));
+        setBlogs(blogsData);
         setQuestions(questionsData);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);

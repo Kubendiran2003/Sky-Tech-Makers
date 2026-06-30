@@ -41,3 +41,13 @@ export const getPendingBlogs = async () => {
     return [];
   }
 };
+
+export const getMyBlogs = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/api/blogs/my-blogs`, { withCredentials: true });
+    return response.data || [];
+  } catch (error) {
+    console.error('Error fetching user blogs:', error);
+    return [];
+  }
+};

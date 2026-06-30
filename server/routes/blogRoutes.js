@@ -7,6 +7,7 @@ const {
   approveBlog,
   deleteBlog,
   getPendingBlogs,
+  getMyBlogs,
 } = require("../controllers/blogController");
 const { isAuthenticated } = require("../middleware/auth");
 const { authorizeRoles } = require("../middleware/role");
@@ -15,6 +16,7 @@ const router = express.Router();
 
 router.post("/", isAuthenticated, createBlog);
 router.get("/", getBlogs);
+router.get("/my-blogs", isAuthenticated, getMyBlogs);
 router.get("/pending", isAuthenticated, authorizeRoles("Admin"), getPendingBlogs);
 router.get("/:id", getBlogById);
 router.put("/:id/approve", isAuthenticated, authorizeRoles("Admin"), approveBlog);
