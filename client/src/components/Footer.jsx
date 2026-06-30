@@ -4,6 +4,7 @@ import {
   FiMail, FiMapPin, FiPhone, FiGithub, FiYoutube, FiInstagram,
   FiZap, FiArrowRight, FiHeart,
 } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
 
 const footerLinks = [
   { label: "Blogs", to: "/blogs" },
@@ -22,15 +23,15 @@ const socials = [
   },
   {
     icon: FiInstagram,
-    href: "https://www.instagram.com/skytechmakers/",
+    href: "https://www.instagram.com/skytechmakers/?hl=en",
     label: "Instagram",
     color: "hover:text-pink-400 hover:bg-pink-500/10 hover:border-pink-500/25",
   },
   {
-    icon: FiGithub,
-    href: "https://github.com/skytechmakers",
-    label: "GitHub",
-    color: "hover:text-white hover:bg-white/10 hover:border-white/20",
+    icon: FaWhatsapp,
+    href: "https://wa.me/9198------10",
+    label: "Whatsapp",
+    color: "hover:text-green-400 hover:bg-green-500/10 hover:border-green-500/25",
   },
 ];
 
@@ -104,7 +105,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start gap-3 text-sm text-slate-500">
                 <FiMapPin className="w-4 h-4 text-indigo-400 mt-0.5 flex-shrink-0" />
-                <span>Tamil Nadu, India</span>
+                <span>Chennai, Tamil Nadu, India</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-slate-500">
                 <FiMail className="w-4 h-4 text-indigo-400 mt-0.5 flex-shrink-0" />
@@ -114,7 +115,7 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-3 text-sm text-slate-500">
                 <FiPhone className="w-4 h-4 text-indigo-400 mt-0.5 flex-shrink-0" />
-                <span>+91 98765 43210</span>
+                <span>+91 98 ------ 10</span>
               </li>
             </ul>
           </div>

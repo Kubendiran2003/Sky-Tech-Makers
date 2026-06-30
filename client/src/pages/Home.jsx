@@ -3,9 +3,12 @@ import { motion, useAnimation } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import kubendiranImg from "../assets/kubendiran.jpg";
-import rajkiranImg from "../assets/rajkiran.jpeg";
+import rajkiranImg from "../assets/rajkiran.jpg";
+import sivasakthiImg from "../assets/sivasakthi.jpg";
 import prabavathiImg from "../assets/prabavathi.jpeg";
 import { useTypewriter, Cursor } from "react-simple-typewriter";
+import { TestimonialsSection } from "@/components/ui/testimonial-v2";
+import { CosmicParallaxBg } from "@/components/ui/parallax-cosmic-background";
 import {
   ArrowRight,
   Book,
@@ -31,7 +34,6 @@ const Home = () => {
   const { user } = useAuth();
   const controls = useAnimation();
 
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [currentMember, setCurrentMember] = useState(0);
 
   const [text] = useTypewriter({
@@ -42,69 +44,13 @@ const Home = () => {
     typeSpeed: 50,
   });
 
-  const testimonials = [
-    {
-      id: 1,
-      name: "Sarah Johnson",
-      role: "Senior Developer at Google",
-      avatar:
-        "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
-      content:
-        "Sky Tech Makers transformed my career. The interview prep and coding challenges helped me land my dream job at Google. The community support is incredible!",
-      rating: 5,
-      company: "Google",
-    },
-    {
-      id: 2,
-      name: "Michael Chen",
-      role: "Full Stack Engineer at Microsoft",
-      avatar:
-        "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
-      content:
-        "The tech blogs here are gold mines of knowledge. I've learned cutting-edge technologies and best practices that made me stand out in interviews.",
-      rating: 5,
-      company: "Microsoft",
-    },
-    {
-      id: 3,
-      name: "Emily Rodriguez",
-      role: "Frontend Developer at Netflix",
-      avatar:
-        "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
-      content:
-        "The developer tools section is a game-changer. It saved me countless hours and the community here is always ready to help solve complex problems.",
-      rating: 5,
-      company: "Netflix",
-    },
-    {
-      id: 4,
-      name: "David Kim",
-      role: "DevOps Engineer at Amazon",
-      avatar:
-        "https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
-      content:
-        "Sky Tech Makers is my secret weapon for staying ahead in tech. The interview questions are spot-on and helped me ace multiple FAANG interviews.",
-      rating: 5,
-      company: "Amazon",
-    },
-    {
-      id: 5,
-      name: "Jessica Wang",
-      role: "Mobile Developer at Spotify",
-      avatar:
-        "https://images.pexels.com/photos/762020/pexels-photo-762020.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
-      content:
-        "This platform is like having a personal mentor available 24/7. The quality of content and community engagement is unmatched in the industry.",
-      rating: 5,
-      company: "Spotify",
-    },
-  ];
+
 
   const stats = [
-    { number: "15K+", label: "Active Developers", icon: Users },
-    { number: "800+", label: "Tech Articles", icon: Book },
-    { number: "2K+", label: "Interview Questions", icon: Code },
-    { number: "100+", label: "Developer Tools", icon: Tool },
+    { number: "120+", label: "Active Developers", icon: Users },
+    { number: "380+", label: "Tech Articles", icon: Book },
+    { number: "1.6K+", label: "Interview Questions", icon: Code },
+    { number: "48+", label: "Developer Tools", icon: Tool },
   ];
 
   const features = [
@@ -159,10 +105,10 @@ const Home = () => {
   ];
 
   const achievements = [
-    { icon: CheckCircle, text: "Trusted by 15,000+ developers worldwide" },
+    { icon: CheckCircle, text: "Trusted by 560+ developers worldwide" },
     { icon: TrendingUp, text: "95% interview success rate for our users" },
     { icon: Award, text: "Featured in top tech publications" },
-    { icon: Lightbulb, text: "500+ companies hire our community members" },
+    { icon: Lightbulb, text: "50+ companies hire our community members" },
   ];
 
   const courses = [
@@ -220,23 +166,23 @@ const Home = () => {
   const team = [
     {
       name: "Rajkiran P",
-      role: "Founder & CEO",
+      role: "Founder & CEO (Java Full Stack Developer)",
       description:
-        "Founder and visionary leader of Sky Tech Makers. Focused on building a strong tech community and delivering high-quality tech education in Tamil.",
+        "Founder and CEO of Sky Tech Makers. A Java Full Stack Developer dedicated to building a strong community and delivering quality tech education in Tamil.",
       image: rajkiranImg,
       flip: false,
     },
     {
       name: "Siva Sakthi S",
-      role: "Backend Developer",
+      role: "Backend Developer (Java)",
       description:
-        "Specializes in server-side logic and API development. Ensures the platform's backend is fast, scalable, and secure.",
-      image: "https://cdn-icons-png.flaticon.com/512/6997/6997662.png",
+        "Specializes in server-side logic, API development, and Java backend architectures. Ensures the platform's backend is fast, scalable, and secure.",
+      image: sivasakthiImg,
       flip: true,
     },
     {
       name: "Kubendiran P",
-      role: "Full Stack Developer",
+      role: "Full Stack Developer (MERN)",
       description:
         "Expert in both frontend and backend development using the MERN stack. Builds seamless, full-featured web applications and maintains platform stability.",
       image: kubendiranImg,
@@ -244,31 +190,15 @@ const Home = () => {
     },
     {
       name: "Prabavathi S",
-      role: "Content Creator",
+      role: "Software Engineer (Oracle SQL)",
       description:
-        "Creates high-quality educational content, tutorials, and tech blogs. Helps learners understand complex topics in a simple and engaging way.",
+        "Specializes in database design, data integration, and Oracle SQL. Focuses on building robust data pipelines and writing optimized database queries.",
       image: prabavathiImg,
       flip: true,
     },
   ];
 
-  // Auto-scroll testimonials
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [testimonials.length]);
 
-  const nextTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-  };
-
-  const prevTestimonial = () => {
-    setCurrentTestimonial(
-      (prev) => (prev - 1 + testimonials.length) % testimonials.length
-    );
-  };
 
   // Auto-scroll team carousel
   useEffect(() => {
@@ -280,17 +210,8 @@ const Home = () => {
 
   return (
     <div className="bg-[#050508] min-h-screen text-slate-100 relative overflow-hidden">
-      {/* Grid Pattern Background */}
-      <div className="absolute inset-0 grid-pattern opacity-25 pointer-events-none" />
-      
-      {/* Background Orbs */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-indigo-600/10 rounded-full blur-3xl animate-pulse"></div>
-        <div
-          className="absolute bottom-20 right-10 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl animate-pulse"
-          style={{ animationDelay: "2s" }}
-        ></div>
-      </div>
+      {/* Cosmic Parallax Background */}
+      <CosmicParallaxBg head="" text="" className="absolute top-0 left-0 right-0 h-[830px] pointer-events-none z-0 overflow-hidden" />
 
       {/* Hero Section */}
       <section className="pt-20 pb-20 relative z-10">
@@ -301,25 +222,19 @@ const Home = () => {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-full text-sm font-medium mb-8">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-full text-sm font-medium mb-20">
               <Zap className="h-4 w-4 text-indigo-400" />
-              Join 15,000+ developers accelerating their careers
+              Join 560+ developers accelerating their careers
             </div>
 
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              <span className="bg-gradient-to-r from-indigo-400 to-violet-500 bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-20 leading-tight">
+              <span className="bg-gradient-to-t from-gray-500 to-white bg-clip-text text-transparent">
                 {text}
               </span>
               <Cursor cursorStyle="|" />
             </h1>
 
-            <p className="text-lg md:text-xl text-slate-400 mb-12 max-w-3xl mx-auto leading-relaxed">
-              Master technical interviews, learn from industry experts, and join
-              an elite community of developers who land jobs at top tech
-              companies.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-10">
               <Link
                 to={user ? "/dashboard" : "/register"}
                 className="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl font-semibold hover:from-indigo-500 hover:to-violet-500 shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:scale-105"
@@ -502,106 +417,9 @@ const Home = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-24 bg-transparent border-t border-white/5 relative overflow-hidden z-10">
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Success Stories from Our <span className="gradient-text">Community</span>
-            </h2>
-            <p className="text-lg text-slate-400 max-w-3xl mx-auto">
-              Join thousands of developers who transformed their careers with Sky Tech Makers.
-            </p>
-          </motion.div>
-
-          <div className="relative max-w-3xl mx-auto px-4">
-            <div className="overflow-hidden rounded-2xl">
-              <motion.div
-                key={currentTestimonial}
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="bg-[#10121f] border border-white/8 p-8 md:p-10 rounded-2xl shadow-xl"
-              >
-                <div className="flex items-center mb-5">
-                  {[...Array(testimonials[currentTestimonial].rating)].map(
-                    (_, i) => (
-                      <Star
-                        key={i}
-                        className="h-5 w-5 text-amber-400 fill-current"
-                      />
-                    )
-                  )}
-                </div>
-
-                <blockquote className="text-lg md:text-xl text-slate-300 mb-8 leading-relaxed font-medium italic">
-                  "{testimonials[currentTestimonial].content}"
-                </blockquote>
-
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="flex items-center">
-                    <img
-                      src={testimonials[currentTestimonial].avatar}
-                      alt={testimonials[currentTestimonial].name}
-                      className="h-12 w-12 rounded-full object-cover mr-3 border border-white/10"
-                    />
-                    <div>
-                      <div className="font-bold text-white text-base">
-                        {testimonials[currentTestimonial].name}
-                      </div>
-                      <div className="text-slate-500 text-xs font-medium">
-                        {testimonials[currentTestimonial].role}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="sm:text-right border-t border-white/5 sm:border-0 pt-3 sm:pt-0">
-                    <div className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold mb-0.5">Now at</div>
-                    <div className="font-bold text-white text-sm">
-                      {testimonials[currentTestimonial].company}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Navigation */}
-            <button
-              onClick={prevTestimonial}
-              className="hidden lg:flex absolute left-[-60px] top-1/2 -translate-y-1/2 bg-white/5 border border-white/15 hover:bg-white/10 hover:text-white p-3 rounded-full transition-all duration-300 backdrop-blur-sm text-slate-400"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <button
-              onClick={nextTestimonial}
-              className="hidden lg:flex absolute right-[-60px] top-1/2 -translate-y-1/2 bg-white/5 border border-white/15 hover:bg-white/10 hover:text-white p-3 rounded-full transition-all duration-300 backdrop-blur-sm text-slate-400"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
-
-            {/* Dots indicator */}
-            <div className="flex justify-center mt-8 space-x-2">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentTestimonial(index)}
-                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                    index === currentTestimonial
-                      ? "bg-indigo-500 scale-125 shadow-lg shadow-indigo-500/50"
-                      : "bg-white/10 hover:bg-white/20"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <div className="border-t border-white/5 relative z-10">
+        <TestimonialsSection />
+      </div>
 
       {/* Course Section */}
       <section className="container mx-auto mt-20 mb-28 px-4 relative z-10">
@@ -640,7 +458,7 @@ const Home = () => {
                   <h3 className="text-lg font-bold text-white mt-2 group-hover:text-indigo-300 transition-colors leading-snug">
                     {course.title}
                   </h3>
-                  
+
                   <p className="text-slate-400 mt-2 text-xs leading-relaxed line-clamp-3">
                     {course.description}
                   </p>
@@ -707,9 +525,8 @@ const Home = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -50 }}
               transition={{ duration: 0.5, ease: "easeInOut" }}
-              className={`flex flex-col ${
-                team[currentMember].flip ? "md:flex-row-reverse" : "md:flex-row"
-              } items-center gap-10 bg-[#10121f] border border-white/8 shadow-2xl p-8 md:p-12 rounded-2xl`}
+              className={`flex flex-col ${team[currentMember].flip ? "md:flex-row-reverse" : "md:flex-row"
+                } items-center gap-10 bg-[#10121f] border border-white/8 shadow-2xl p-8 md:p-12 rounded-2xl`}
             >
               <img
                 src={team[currentMember].image}
@@ -735,11 +552,10 @@ const Home = () => {
                 <button
                   key={index}
                   onClick={() => setCurrentMember(index)}
-                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                    index === currentMember
-                      ? "bg-indigo-500 scale-125 shadow-lg shadow-indigo-500/50"
-                      : "bg-white/10 hover:bg-white/20"
-                  }`}
+                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${index === currentMember
+                    ? "bg-indigo-500 scale-125 shadow-lg shadow-indigo-500/50"
+                    : "bg-white/10 hover:bg-white/20"
+                    }`}
                 />
               ))}
             </div>
@@ -783,7 +599,7 @@ const Home = () => {
               </div>
 
               <div className="mt-8 text-xs text-slate-500 uppercase tracking-widest font-semibold">
-                Trusted by 15,000+ developers worldwide
+                Trusted by 560+ developers worldwide
               </div>
             </motion.div>
           </div>
