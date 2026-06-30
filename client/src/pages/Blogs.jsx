@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import BlogCard from "../components/BlogCard";
 import { getBlogs } from "../services/blogs";
-import { FiSearch, FiBook, FiX, FiPlus } from "react-icons/fi";
+import { FiSearch, FiBook, FiX, FiPlus, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 const stagger = {
   hidden: {},
@@ -19,6 +19,14 @@ export default function Blogs() {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(() => {
+    const w = window.innerWidth;
+    if (w < 768) return 8; // Mobile
+    if (w < 1024) return 10; // Tablet
+    return 12; // Laptop / Desktop
+  });
+  const [userSelectedSize, setUserSelectedSize] = useState(false);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -34,12 +42,72 @@ export default function Blogs() {
     fetchBlogs();
   }, []);
 
+  useEffect(() => {
+    if (userSelectedSize) return;
+    const handleResize = () => {
+      const w = window.innerWidth;
+      if (w < 768) setPageSize(8);
+      else if (w < 1024) setPageSize(10);
+      else setPageSize(12);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [userSelectedSize]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   const filteredBlogs = blogs.filter(
     (blog) =>
       blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       blog.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
       blog.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()))
   );
+
+  const totalPages = Math.ceil(filteredBlogs.length / pageSize) || 1;
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [totalPages, currentPage]);
+
+  const displayedBlogs = filteredBlogs.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisible = 5;
+
+    if (totalPages <= maxVisible) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      pages.push(1);
+
+      if (currentPage > 3) {
+        pages.push("...");
+      }
+
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+
+      if (currentPage < totalPages - 2) {
+        pages.push("...");
+      }
+
+      pages.push(totalPages);
+    }
+    return pages;
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -123,18 +191,94 @@ export default function Blogs() {
             <p className="text-slate-600 text-sm">Try adjusting your search or check back later.</p>
           </motion.div>
         ) : (
-          <motion.div
-            variants={stagger}
-            initial="hidden"
-            animate="show"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {filteredBlogs.map((blog) => (
-              <motion.div key={blog._id} variants={itemFade}>
-                <BlogCard blog={blog} />
-              </motion.div>
-            ))}
-          </motion.div>
+          <>
+            <motion.div
+              variants={stagger}
+              initial="hidden"
+              animate="show"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              {displayedBlogs.map((blog) => (
+                <motion.div key={blog._id} variants={itemFade}>
+                  <BlogCard blog={blog} />
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Pagination Controls */}
+            <div className="mt-16 pt-8 border-t border-white/5 flex flex-col items-center gap-6">
+              {/* Centered page numbers */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="w-10 h-10 rounded-xl border border-white/8 bg-[#131524] text-slate-400 flex items-center justify-center hover:bg-indigo-500/10 hover:text-white disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-slate-400 transition-all duration-200"
+                  aria-label="Previous Page"
+                >
+                  <FiChevronLeft className="w-5 h-5" />
+                </button>
+
+                {getPageNumbers().map((page, idx) => {
+                  if (page === "...") {
+                    return (
+                      <span key={`dots-${idx}`} className="px-2 text-slate-600 font-semibold select-none">
+                        ...
+                      </span>
+                    );
+                  }
+                  return (
+                    <button
+                      key={`page-${page}`}
+                      onClick={() => setCurrentPage(page)}
+                      className={`w-10 h-10 rounded-xl border font-semibold text-sm transition-all duration-200 ${
+                        currentPage === page
+                          ? "bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-600/20"
+                          : "border-white/8 bg-[#131524] text-slate-400 hover:bg-indigo-500/10 hover:text-white"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+
+                <button
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="w-10 h-10 rounded-xl border border-white/8 bg-[#131524] text-slate-400 flex items-center justify-center hover:bg-indigo-500/10 hover:text-white disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-slate-400 transition-all duration-200"
+                  aria-label="Next Page"
+                >
+                  <FiChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Selector and count row */}
+              <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium text-slate-500">
+                <div className="flex items-center gap-2">
+                  <span>Show</span>
+                  <select
+                    value={pageSize}
+                    onChange={(e) => {
+                      setPageSize(Number(e.target.value));
+                      setUserSelectedSize(true);
+                      setCurrentPage(1);
+                    }}
+                    className="bg-[#131524] border border-white/8 rounded-lg px-2.5 py-1.5 text-slate-300 font-semibold focus:outline-none focus:border-indigo-500/40 transition-colors"
+                  >
+                    <option value={8}>8</option>
+                    <option value={10}>10</option>
+                    <option value={12}>12</option>
+                    <option value={16}>16</option>
+                    <option value={20}>20</option>
+                  </select>
+                  <span>records per page</span>
+                </div>
+                <div>
+                  Results: {Math.min((currentPage - 1) * pageSize + 1, filteredBlogs.length)} -{" "}
+                  {Math.min(currentPage * pageSize, filteredBlogs.length)} of {filteredBlogs.length}
+                </div>
+              </div>
+            </div>
+          </>
         )}
       </div>
     </div>

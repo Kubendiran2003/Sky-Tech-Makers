@@ -24,7 +24,9 @@ export default function Tools() {
   const handleFormat = async () => {
     try {
       const result = await formatJson(jsonInput);
-      setFormattedJson(result);
+      // Axios may automatically parse the stringified JSON response into an object
+      const formattedResult = typeof result === "object" ? JSON.stringify(result, null, 2) : result;
+      setFormattedJson(formattedResult);
       setError("");
     } catch {
       setError("Invalid JSON format. Please check your input.");

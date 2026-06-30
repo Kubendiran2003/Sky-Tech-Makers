@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getQuestions } from "../services/questions";
-import { FiSearch, FiFilter, FiPlus, FiHelpCircle, FiChevronDown, FiChevronUp, FiBriefcase, FiBarChart2 } from "react-icons/fi";
+import { FiSearch, FiFilter, FiPlus, FiHelpCircle, FiChevronDown, FiChevronUp, FiBriefcase, FiBarChart2, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 const difficultyConfig = {
@@ -22,7 +22,7 @@ function QuestionCard({ question, index }) {
     >
       <button
         onClick={() => setOpen(!open)}
-        className="w-full text-left p-5 flex items-start justify-between gap-4 group"
+        className="w-full text-left p-6 flex items-start justify-between gap-4 group min-h-[115px]"
       >
         <div className="flex-1">
           <div className="flex flex-wrap items-center gap-2 mb-2.5">
@@ -70,6 +70,14 @@ export default function Questions() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({ company: "", difficulty: "" });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(() => {
+    const w = window.innerWidth;
+    if (w < 768) return 8; // Mobile
+    if (w < 1024) return 10; // Tablet
+    return 12; // Laptop / Desktop
+  });
+  const [userSelectedSize, setUserSelectedSize] = useState(false);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -85,6 +93,22 @@ export default function Questions() {
     fetchQuestions();
   }, [filters]);
 
+  useEffect(() => {
+    if (userSelectedSize) return;
+    const handleResize = () => {
+      const w = window.innerWidth;
+      if (w < 768) setPageSize(8);
+      else if (w < 1024) setPageSize(10);
+      else setPageSize(12);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [userSelectedSize]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filters]);
+
   const filteredQuestions = questions.filter(
     (q) =>
       q.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -97,6 +121,50 @@ export default function Questions() {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
+  const totalPages = Math.ceil(filteredQuestions.length / pageSize) || 1;
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [totalPages, currentPage]);
+
+  const displayedQuestions = filteredQuestions.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisible = 5;
+
+    if (totalPages <= maxVisible) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      pages.push(1);
+
+      if (currentPage > 3) {
+        pages.push("...");
+      }
+
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+
+      if (currentPage < totalPages - 2) {
+        pages.push("...");
+      }
+
+      pages.push(totalPages);
+    }
+    return pages;
+  };
+
   const selectClass = "px-3 py-2.5 bg-[#131524] border border-white/8 rounded-xl text-sm text-slate-300 focus:outline-none focus:border-indigo-500/50 transition-all cursor-pointer [&>option]:bg-[#10121f]";
 
   return (
@@ -104,7 +172,7 @@ export default function Questions() {
       <div className="absolute inset-0 grid-pattern opacity-25 pointer-events-none" />
       <div className="absolute top-0 right-1/3 w-96 h-96 bg-violet-600/8 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 mb-5">
@@ -169,9 +237,9 @@ export default function Questions() {
 
         {/* Content */}
         {loading ? (
-          <div className="space-y-3">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-20 bg-white/3 rounded-2xl animate-pulse" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-24 bg-white/3 rounded-2xl animate-pulse" />
             ))}
           </div>
         ) : filteredQuestions.length === 0 ? (
@@ -183,11 +251,86 @@ export default function Questions() {
             <p className="text-slate-600 text-sm">Try adjusting your search or filters.</p>
           </div>
         ) : (
-          <div className="space-y-3">
-            {filteredQuestions.map((question, index) => (
-              <QuestionCard key={question._id} question={question} index={index} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {displayedQuestions.map((question, index) => (
+                <QuestionCard key={question._id} question={question} index={index} />
+              ))}
+            </div>
+
+            {/* Pagination Controls */}
+            <div className="mt-16 pt-8 border-t border-white/5 flex flex-col items-center gap-6">
+              {/* Centered page numbers */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="w-10 h-10 rounded-xl border border-white/8 bg-[#131524] text-slate-400 flex items-center justify-center hover:bg-indigo-500/10 hover:text-white disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-slate-400 transition-all duration-200"
+                  aria-label="Previous Page"
+                >
+                  <FiChevronLeft className="w-5 h-5" />
+                </button>
+
+                {getPageNumbers().map((page, idx) => {
+                  if (page === "...") {
+                    return (
+                      <span key={`dots-${idx}`} className="px-2 text-slate-600 font-semibold select-none">
+                        ...
+                      </span>
+                    );
+                  }
+                  return (
+                    <button
+                      key={`page-${page}`}
+                      onClick={() => setCurrentPage(page)}
+                      className={`w-10 h-10 rounded-xl border font-semibold text-sm transition-all duration-200 ${currentPage === page
+                          ? "bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-600/20"
+                          : "border-white/8 bg-[#131524] text-slate-400 hover:bg-indigo-500/10 hover:text-white"
+                        }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+
+                <button
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="w-10 h-10 rounded-xl border border-white/8 bg-[#131524] text-slate-400 flex items-center justify-center hover:bg-indigo-500/10 hover:text-white disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-slate-400 transition-all duration-200"
+                  aria-label="Next Page"
+                >
+                  <FiChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Selector and count row */}
+              <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium text-slate-500">
+                <div className="flex items-center gap-2">
+                  <span>Show</span>
+                  <select
+                    value={pageSize}
+                    onChange={(e) => {
+                      setPageSize(Number(e.target.value));
+                      setUserSelectedSize(true);
+                      setCurrentPage(1);
+                    }}
+                    className="bg-[#131524] border border-white/8 rounded-lg px-2.5 py-1.5 text-slate-300 font-semibold focus:outline-none focus:border-indigo-500/40 transition-colors"
+                  >
+                    <option value={8}>8</option>
+                    <option value={10}>10</option>
+                    <option value={12}>12</option>
+                    <option value={16}>16</option>
+                    <option value={20}>20</option>
+                  </select>
+                  <span>records per page</span>
+                </div>
+                <div>
+                  Results: {Math.min((currentPage - 1) * pageSize + 1, filteredQuestions.length)} -{" "}
+                  {Math.min(currentPage * pageSize, filteredQuestions.length)} of {filteredQuestions.length}
+                </div>
+              </div>
+            </div>
+          </>
         )}
       </div>
     </div>

@@ -49,17 +49,9 @@ app.use("/api/questions", questionRoutes);
 app.use("/api/tools", toolRoutes);
 app.use("/api/challenges", challengeRoutes);
 
-// ✅ Connect DB
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch(err => console.error("❌ MongoDB Connection Error:", err));
-
-// ✅ Start Server (only if not running in Vercel serverless context)
-if (process.env.NODE_ENV !== "production" || !process.env.VERCEL) {
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () =>
-    console.log(`✅ Server running on port ${PORT}`)
+// ✅ Connect DB and Start Server
+mongoose.connect(process.env.MONGO_URI).then(() => {
+  app.listen(process.env.PORT, () =>
+    console.log(`✅ Server running on port ${process.env.PORT}`)
   );
-}
-
-module.exports = app;
+});

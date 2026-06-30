@@ -36,3 +36,13 @@ exports.getPendingQuestions = async (req, res) => {
   }
 };
 
+exports.getMyQuestions = async (req, res) => {
+  try {
+    const questions = await Question.find({ submittedBy: req.user._id });
+    res.json(questions);
+  } catch (error) {
+    console.error("Error fetching user questions:", error);
+    res.status(500).json({ message: "Server error fetching user questions" });
+  }
+};
+

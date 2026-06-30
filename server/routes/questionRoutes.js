@@ -6,6 +6,7 @@ const {
   approveQuestion,
   deleteQuestion,
   getPendingQuestions,
+  getMyQuestions,
 } = require("../controllers/questionController");
 const { isAuthenticated } = require("../middleware/auth");
 const { authorizeRoles } = require("../middleware/role");
@@ -14,6 +15,7 @@ const router = express.Router();
 
 router.post("/", isAuthenticated, submitQuestion);
 router.get("/", getQuestions);
+router.get("/my-questions", isAuthenticated, getMyQuestions);
 router.get("/pending", isAuthenticated, authorizeRoles("Admin"), getPendingQuestions);
 router.put("/:id/approve", isAuthenticated, authorizeRoles("Admin"), approveQuestion);
 router.delete("/:id", isAuthenticated, authorizeRoles("Admin"), deleteQuestion);
