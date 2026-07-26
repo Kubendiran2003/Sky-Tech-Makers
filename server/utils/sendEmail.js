@@ -59,10 +59,15 @@ const sendEmail = async (options) => {
 
   try {
     const transporterOptions = {
-      service: service,
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         user: mailUser,
         pass: mailPass,
+      },
+      tls: {
+        rejectUnauthorized: false,
       },
     };
 
