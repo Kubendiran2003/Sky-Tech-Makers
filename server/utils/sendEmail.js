@@ -74,6 +74,9 @@ const sendEmail = async (options) => {
       host: "smtp.gmail.com",
       port: 465,
       secure: true,
+      connectionTimeout: 5000,
+      greetingTimeout: 5000,
+      socketTimeout: 5000,
       auth: {
         user: mailUser,
         pass: mailPass,
