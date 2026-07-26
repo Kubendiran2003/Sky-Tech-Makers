@@ -110,7 +110,7 @@ export default function Footer() {
               <li className="flex items-start gap-3 text-sm text-slate-500">
                 <FiMail className="w-4 h-4 text-indigo-400 mt-0.5 flex-shrink-0" />
                 <a href="mailto:skytechmakers@gmail.com" className="hover:text-indigo-400 transition-colors">
-                  skytechmakers@gmail.com
+                  contact.skytechmakers@gmail.com
                 </a>
               </li>
               <li className="flex items-start gap-3 text-sm text-slate-500">

@@ -7,7 +7,7 @@ import { BASE_URL } from "../config";
 import { useAuth } from "../context/AuthContext";
 import kubendiranImg from "../assets/kubendiran.png";
 import rajkiranImg from "../assets/rajkiran.jpg";
-import sivasakthiImg from "../assets/sivasakthi.jpg";
+import sivasakthiImg from "../assets/sivasakthi.jpeg";
 import prabavathiImg from "../assets/prabavathi.png";
 import { useTypewriter, Cursor } from "react-simple-typewriter";
 import { TestimonialsSection } from "@/components/ui/testimonial-v2";
