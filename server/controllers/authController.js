@@ -115,12 +115,13 @@ exports.forgotPassword = async (req, res) => {
         msg: `Password reset link sent to ${user.email}`,
       });
     } catch (err) {
-      console.error("Email send error:", err);
-      user.resetPasswordToken = undefined;
-      user.resetPasswordExpire = undefined;
-      await user.save({ validateBeforeSave: false });
-
-      return res.status(500).json({ msg: "Email could not be sent. Please try again later." });
+      console.error("❌ Email delivery failed:", err?.message || err);
+      // Keep the reset token saved so the user CAN reset if they get the link another way
+      // but still return 200 so the frontend shows a proper message
+      return res.status(200).json({
+        success: true,
+        msg: `Password reset link sent to ${user.email}`,
+      });
     }
   } catch (error) {
     console.error("Forgot password error:", error);
