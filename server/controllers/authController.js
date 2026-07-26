@@ -108,6 +108,7 @@ exports.forgotPassword = async (req, res) => {
         subject: "Sky Tech Makers - Password Reset Token",
         message,
         html,
+        useNodemailer: true, // Always use Nodemailer for password reset (works with any inbox)
       });
 
       res.status(200).json({
