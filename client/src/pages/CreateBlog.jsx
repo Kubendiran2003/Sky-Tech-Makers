@@ -45,17 +45,17 @@ export default function CreateBlog() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden px-4 py-16">
+    <div className="min-h-screen relative overflow-hidden px-4 py-16 bg-[#f4f6f8]">
       {/* Background decoration */}
-      <div className="absolute inset-0 grid-pattern opacity-25 pointer-events-none" />
-      <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-indigo-600/8 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative max-w-2xl mx-auto">
         {/* Back Link */}
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
           <Link
             to="/blogs"
-            className="inline-flex items-center gap-2 text-slate-500 hover:text-indigo-400 text-sm font-medium mb-8 transition-colors"
+            className="inline-flex items-center gap-2 text-slate-500 hover:text-indigo-600 text-sm font-medium mb-8 transition-colors"
           >
             <FiArrowLeft className="w-4 h-4" />
             Back to Blogs
@@ -73,7 +73,7 @@ export default function CreateBlog() {
             <FiBook className="w-3.5 h-3.5 text-indigo-400" />
             <span className="text-xs font-semibold text-indigo-400 uppercase tracking-wider">Community Knowledge</span>
           </div>
-          <h1 className="text-3xl font-bold text-white">Create New Blog</h1>
+          <h1 className="text-3xl font-bold text-slate-900">Create New Blog</h1>
           <p className="text-slate-500 text-sm mt-1.5">Share your tech insights, tutorials, and experiences</p>
         </motion.div>
 
@@ -82,16 +82,16 @@ export default function CreateBlog() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="glass-strong rounded-2xl p-6 md:p-8 shadow-2xl shadow-black/40"
+          className="bg-white border border-slate-200/80 rounded-2xl p-6 md:p-8 shadow-xl shadow-slate-100/50"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Title */}
             <div>
-              <label htmlFor="blog-title" className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              <label htmlFor="blog-title" className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
                 Title
               </label>
               <div className="relative">
-                <FiEdit3 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                <FiEdit3 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                 <input
                   type="text"
                   id="blog-title"
@@ -99,14 +99,14 @@ export default function CreateBlog() {
                   placeholder="e.g. Mastering React Server Components"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-[#131524] border border-white/8 rounded-xl text-white placeholder-slate-600 text-sm focus:outline-none focus:border-indigo-500/50 focus:bg-indigo-500/5 focus:ring-2 focus:ring-indigo-500/15 transition-all duration-200"
+                  className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all duration-200 shadow-sm"
                 />
               </div>
             </div>
 
             {/* Content */}
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
                 Content
               </label>
               <textarea
@@ -116,21 +116,21 @@ export default function CreateBlog() {
                 placeholder="Write your article content using Markdown formatting..."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="w-full px-4 py-3 bg-[#080b14]/50 border border-white/8 rounded-xl text-white placeholder-slate-600 text-sm focus:outline-none focus:border-indigo-500/50 focus:bg-indigo-500/5 focus:ring-2 focus:ring-indigo-500/15 transition-all duration-200 font-mono scrollbar-thin resize-y"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 placeholder-slate-400 text-sm focus:outline-none focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 transition-all duration-200 font-mono scrollbar-thin resize-y shadow-sm"
               />
-              <p className="mt-1.5 text-xs text-slate-600 italic">
+              <p className="mt-1.5 text-xs text-slate-500 italic">
                 Markdown formatting is fully supported (headings, lists, bold text, code snippets).
               </p>
             </div>
 
             {/* Tags */}
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
                 Tags
               </label>
               <div className="flex gap-2">
                 <div className="relative flex-1">
-                  <FiTag className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                  <FiTag className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                   <input
                     type="text"
                     id="tags"
@@ -138,13 +138,13 @@ export default function CreateBlog() {
                     value={tagInput}
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddTag())}
-                    className="w-full pl-10 pr-4 py-3 bg-[#131524] border border-white/8 rounded-xl text-white placeholder-slate-600 text-sm focus:outline-none focus:border-indigo-500/50 focus:bg-indigo-500/5 focus:ring-2 focus:ring-indigo-500/15 transition-all duration-200"
+                    className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all duration-200 shadow-sm"
                   />
                 </div>
                 <button
                   type="button"
                   onClick={handleAddTag}
-                  className="flex items-center justify-center px-4 py-3 rounded-xl text-sm font-bold text-white bg-indigo-500/10 border border-indigo-500/20 hover:bg-indigo-500/20 hover:border-indigo-500/30 transition-all duration-200"
+                  className="flex items-center justify-center px-4 py-3 rounded-xl text-sm font-bold text-indigo-600 bg-indigo-500/10 border border-indigo-500/20 hover:bg-indigo-500/20 hover:border-indigo-500/30 transition-all duration-200"
                 >
                   <FiPlus className="w-4 h-4" />
                 </button>
@@ -155,13 +155,13 @@ export default function CreateBlog() {
                   {tags.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase tracking-wider"
+                      className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-600 border border-indigo-500/20 uppercase tracking-wider"
                     >
                       {tag}
                       <button
                         type="button"
                         onClick={() => handleRemoveTag(tag)}
-                        className="text-slate-400 hover:text-indigo-400 transition-colors ml-1.5"
+                        className="text-slate-400 hover:text-indigo-600 transition-colors ml-1.5"
                       >
                         <FiX className="w-3.5 h-3.5" />
                       </button>
@@ -172,7 +172,7 @@ export default function CreateBlog() {
             </div>
 
             {/* Submit */}
-            <div className="pt-4 border-t border-white/5 flex justify-end">
+            <div className="pt-4 border-t border-slate-200 flex justify-end">
               <motion.button
                 type="submit"
                 disabled={loading}

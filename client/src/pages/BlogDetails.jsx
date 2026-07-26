@@ -50,16 +50,16 @@ export default function BlogDetails() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      <div className="absolute inset-0 grid-pattern opacity-20 pointer-events-none" />
-      <div className="absolute top-0 right-1/3 w-80 h-80 bg-indigo-600/6 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen relative overflow-hidden bg-[#f4f6f8]">
+      <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
+      <div className="absolute top-0 right-1/3 w-80 h-80 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative max-w-3xl mx-auto px-4 sm:px-6 py-20">
         {/* Back Link */}
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
           <Link
             to="/blogs"
-            className="inline-flex items-center gap-2 text-slate-500 hover:text-indigo-400 text-sm font-medium mb-10 transition-colors"
+            className="inline-flex items-center gap-2 text-slate-500 hover:text-indigo-600 text-sm font-medium mb-10 transition-colors"
           >
             <FiArrowLeft className="w-4 h-4" />
             Back to Blogs
@@ -71,25 +71,25 @@ export default function BlogDetails() {
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mb-5">
             {blog.tags.map((tag) => (
-              <span key={tag} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase tracking-wider">
+              <span key={tag} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/10 text-indigo-700 border border-indigo-500/20 uppercase tracking-wider">
                 <FiTag className="w-3 h-3" /> {tag}
               </span>
             ))}
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-bold text-white leading-tight mb-5">
+          <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 leading-tight mb-5">
             {blog.title}
           </h1>
 
           {/* Meta */}
-          <div className="flex flex-wrap items-center gap-5 pb-6 border-b border-white/7">
+          <div className="flex flex-wrap items-center gap-5 pb-6 border-b border-slate-200">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center flex-shrink-0">
                 <FiUser className="w-4 h-4 text-white" />
               </div>
               <div>
-                <p className="text-white text-sm font-semibold leading-none">{blog.author?.name || "Anonymous"}</p>
-                <p className="text-slate-600 text-[10px] mt-0.5">Author</p>
+                <p className="text-slate-800 text-sm font-semibold leading-none">{blog.author?.name || "Anonymous"}</p>
+                <p className="text-slate-500 text-[10px] mt-0.5">Author</p>
               </div>
             </div>
             <span className="flex items-center gap-1.5 text-slate-500 text-sm">
@@ -108,7 +108,7 @@ export default function BlogDetails() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.2 }}
-          className="prose"
+          className="prose prose-light"
         >
           <ReactMarkdown>{blog.content}</ReactMarkdown>
         </motion.article>

@@ -263,6 +263,36 @@ body {
   margin-bottom: 1rem;
 }
 
+.prose-light {
+  color: #334155 !important;
+}
+
+.prose-light h1,
+.prose-light h2,
+.prose-light h3,
+.prose-light h4,
+.prose-light h5,
+.prose-light h6 {
+  color: #0f172a !important;
+}
+
+.prose-light blockquote {
+  color: #475569 !important;
+}
+
+.prose-light code {
+  background: rgba(79, 70, 229, 0.08) !important;
+  color: #4f46e5 !important;
+  border-color: rgba(79, 70, 229, 0.15) !important;
+}
+
+.prose-light pre {
+  background: #f8fafc !important;
+  color: #334155 !important;
+  border-color: #e2e8f0 !important;
+}
+
+
 /* ======================= LINE CLAMP ======================= */
 .line-clamp-2 {
   display: -webkit-box;

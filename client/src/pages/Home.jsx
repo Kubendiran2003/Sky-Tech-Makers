@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { motion, useAnimation } from "framer-motion";
+import React, { useEffect, useState, useRef } from "react";
+import { motion, useAnimation, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { BASE_URL } from "../config";
 import { useAuth } from "../context/AuthContext";
-import kubendiranImg from "../assets/kubendiran.jpg";
+import kubendiranImg from "../assets/kubendiran.png";
 import rajkiranImg from "../assets/rajkiran.jpg";
 import sivasakthiImg from "../assets/sivasakthi.jpg";
-import prabavathiImg from "../assets/prabavathi.jpeg";
+import prabavathiImg from "../assets/prabavathi.png";
 import { useTypewriter, Cursor } from "react-simple-typewriter";
 import { TestimonialsSection } from "@/components/ui/testimonial-v2";
 import { CosmicParallaxBg } from "@/components/ui/parallax-cosmic-background";
+import { CircularTestimonials } from "@/components/ui/circular-testimonials";
 import {
   ArrowRight,
   Book,
@@ -20,6 +24,7 @@ import {
   Star,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Mail,
   Globe,
   Zap,
@@ -28,13 +33,67 @@ import {
   TrendingUp,
   Lightbulb,
   Coffee,
+  Terminal,
+  Cpu,
+  Layers,
+  Database,
 } from "lucide-react";
 
 const Home = () => {
   const { user } = useAuth();
   const controls = useAnimation();
 
-  const [currentMember, setCurrentMember] = useState(0);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "About Website",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const selectRef = useRef(null);
+
+  const subjectOptions = [
+    "About Website",
+    "Blogs",
+    "Interview Questions and Answer",
+    "Tools",
+    "Coding Leaderboard",
+    "Daily Challenge",
+    "Others",
+  ];
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (selectRef.current && !selectRef.current.contains(event.target)) {
+        setIsSelectOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.name || !formData.email || !formData.message) return;
+    setIsSubmitting(true);
+    try {
+      const { data } = await axios.post(`${BASE_URL}/api/contact`, formData);
+      toast.success(data.msg || "Message sent successfully!");
+      setSubmitted(true);
+      setFormData({ name: "", email: "", subject: "About Website", message: "" });
+    } catch (error) {
+      toast.error(error.response?.data?.msg || "Failed to send message. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const [text] = useTypewriter({
     words: ["Welcome to Sky Tech Makers", "Make Your Tech to the Sky"],
@@ -111,72 +170,22 @@ const Home = () => {
     { icon: Lightbulb, text: "50+ companies hire our community members" },
   ];
 
-  const courses = [
-    {
-      level: "Beginner",
-      title: "Frontend Development in Tamil",
-      description:
-        "Learn HTML, CSS, JavaScript and React from scratch in Tamil. Perfect for aspiring web developers.",
-      duration: "10hrs Duration",
-      likes: "25k Likes",
-      topics: "12+ Topics",
-      project: "Portfolio Project",
-      uploadDate: "Uploaded on Jan 10, 2024",
-      color: "bg-[#E0F7FA] border-[#B2EBF2]",
-      badgeColor: "bg-white",
-      image: "https://img.icons8.com/color/96/000000/html-5--v1.png",
-      video:
-        "https://l.instagram.com/?u=https%3A%2F%2Fwww.youtube.com%2F%40SkyTechMakers%3Ffbclid%3DPAZXh0bgNhZW0CMTEAAaeyFZQEvJRlYkSSThFZTqBdav9xbLVl_jjVjrbSbYNvQOMnw-A9ZF6mCBshqA_aem_mR9v5bL0usEq6mZZRiVHOg&e=AT0QIdnOFeKcji4oIPmjND2kuABbLcfiTZN6N0-Q7ZZ7ZyAMTxPSDWM-wsDiDPxsYFHby1Mtay8wTXHmvBg0YdoSnvKO2ZSAsGql1Q",
-    },
-    {
-      level: "Beginner",
-      title: "Java Full Course in Tamil",
-      description:
-        "Master Java fundamentals, OOPs concepts, and real-world applications with hands-on coding.",
-      duration: "8.5hrs Duration",
-      likes: "5k Likes",
-      topics: "15+ Topics",
-      project: "Student Info Project",
-      uploadDate: "Uploaded on Mar 15, 2024",
-      color: "bg-[#FFF3E0] border-[#FFE0B2]",
-      badgeColor: "bg-white",
-      image: "https://img.icons8.com/color/96/java-coffee-cup-logo.png",
-      video:
-        "https://l.instagram.com/?u=https%3A%2F%2Fwww.youtube.com%2F%40SkyTechMakers%3Ffbclid%3DPAZXh0bgNhZW0CMTEAAaeyFZQEvJRlYkSSThFZTqBdav9xbLVl_jjVjrbSbYNvQOMnw-A9ZF6mCBshqA_aem_mR9v5bL0usEq6mZZRiVHOg&e=AT0QIdnOFeKcji4oIPmjND2kuABbLcfiTZN6N0-Q7ZZ7ZyAMTxPSDWM-wsDiDPxsYFHby1Mtay8wTXHmvBg0YdoSnvKO2ZSAsGql1Q",
-    },
-    {
-      level: "Beginner",
-      title: "MERN Stack Development in Tamil",
-      description:
-        "Build full-stack web apps using MongoDB, Express, React, and Node.js - explained in Tamil.",
-      duration: "12hrs Duration",
-      likes: "18k Likes",
-      topics: "20+ Topics",
-      project: "Blog App Project",
-      uploadDate: "Uploaded on May 5, 2024",
-      color: "bg-[#E8F5E9] border-[#C8E6C9]",
-      badgeColor: "bg-white",
-      image:
-        "https://www.pngkey.com/png/detail/142-1425281_built-with-bootstrap-mern-stack-logo-png.png",
-      video:
-        "https://l.instagram.com/?u=https%3A%2F%2Fwww.youtube.com%2F%40SkyTechMakers%3Ffbclid%3DPAZXh0bgNhZW0CMTEAAaeyFZQEvJRlYkSSThFZTqBdav9xbLVl_jjVjrbSbYNvQOMnw-A9ZF6mCBshqA_aem_mR9v5bL0usEq6mZZRiVHOg&e=AT0QIdnOFeKcji4oIPmjND2kuABbLcfiTZN6N0-Q7ZZ7ZyAMTxPSDWM-wsDiDPxsYFHby1Mtay8wTXHmvBg0YdoSnvKO2ZSAsGql1Q",
-    },
-  ];
+
 
   const team = [
     {
       name: "Rajkiran P",
       role: "Founder & CEO (Java Full Stack Developer)",
       description:
-        "Founder and CEO of Sky Tech Makers. A Java Full Stack Developer dedicated to building a strong community and delivering quality tech education in Tamil.",
+        "Founder and CEO of Sky Tech Makers. A Java Full Stack Developer dedicated to building a strong community and delivering quality tech education in Tamil. Passionate about empowering aspiring engineers, he designs structured courses and mentors developers to master enterprise software design. With 5+ years of experience, he focuses on scaling learning platforms and bridging the gap to industry demands.",
       image: rajkiranImg,
       flip: false,
     },
     {
-      name: "Siva Sakthi S",
+      name: "Sivasakthi S",
       role: "Backend Developer (Java)",
       description:
-        "Specializes in server-side logic, API development, and Java backend architectures. Ensures the platform's backend is fast, scalable, and secure.",
+        "Specializes in server-side logic, API development, and Java backend architectures. Focuses on building robust, high-performance database access layers and optimized server integrations. With a strong foundation in server design and concurrent systems computation, Siva designs schema integration endpoints that secure data transfer and speed. She is committed to sharing backend best practices and server development basics with the next generation of engineers.",
       image: sivasakthiImg,
       flip: true,
     },
@@ -184,7 +193,7 @@ const Home = () => {
       name: "Kubendiran P",
       role: "Full Stack Developer (MERN)",
       description:
-        "Expert in both frontend and backend development using the MERN stack. Builds seamless, full-featured web applications and maintains platform stability.",
+        "Specializes in full-stack development, MERN application logic, and user flow architectures. Focuses on building responsive, high-performance web applications and optimized interface configurations. With a strong foundation in modern state management and real-time socket connections, He designs responsive interfaces that secure seamless user interaction and speed. He is committed to sharing full stack best practices and web development basics with the next generation of engineers.",
       image: kubendiranImg,
       flip: false,
     },
@@ -192,7 +201,7 @@ const Home = () => {
       name: "Prabavathi S",
       role: "Software Engineer (Oracle SQL)",
       description:
-        "Specializes in database design, data integration, and Oracle SQL. Focuses on building robust data pipelines and writing optimized database queries.",
+        "Specializes in database design, data integration, and Oracle SQL. Focuses on building robust data pipelines and writing optimized database queries. With a strong foundation in database management systems and query performance tuning, She designs schema models that secure data integrity and speed. She is committed to sharing DBMS best practices and database administration basics with the next generation of engineers.",
       image: prabavathiImg,
       flip: true,
     },
@@ -200,22 +209,17 @@ const Home = () => {
 
 
 
-  // Auto-scroll team carousel
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentMember((prev) => (prev + 1) % team.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, [team.length]);
+
 
   return (
     <div className="bg-[#050508] min-h-screen text-slate-100 relative overflow-hidden">
-      {/* Cosmic Parallax Background */}
-      <CosmicParallaxBg head="" text="" className="absolute top-0 left-0 right-0 h-[830px] pointer-events-none z-0 overflow-hidden" />
 
       {/* Hero Section */}
-      <section className="pt-20 pb-20 relative z-10">
-        <div className="container mx-auto px-4 text-center">
+      <section className="pt-20 pb-20 relative overflow-hidden z-10">
+        {/* Cosmic Parallax Background */}
+        <CosmicParallaxBg head="" text="" className="absolute top-0 left-0 right-0 h-[830px] pointer-events-none z-0" />
+
+        <div className="container mx-auto px-4 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -227,17 +231,17 @@ const Home = () => {
               Join 560+ developers accelerating their careers
             </div>
 
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-20 leading-tight">
+            <h1 className="text-xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-20 leading-tight">
               <span className="bg-gradient-to-t from-gray-500 to-white bg-clip-text text-transparent">
                 {text}
               </span>
               <Cursor cursorStyle="|" />
             </h1>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-10">
+            <div className="flex flex-col sm:flex-row gap-8 sm:gap-4 justify-center items-center mb-10">
               <Link
                 to={user ? "/dashboard" : "/register"}
-                className="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl font-semibold hover:from-indigo-500 hover:to-violet-500 shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:scale-105"
+                className="group inline-flex items-center px-6 sm:px-8 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl font-semibold hover:from-indigo-500 hover:to-violet-500 shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:scale-105"
               >
                 {user ? "Go to Dashboard" : "Start Learning Free"}
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -275,8 +279,61 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Team Section */}
+      <section className="py-24 bg-[#f4f6f8] border-y border-slate-200 relative overflow-hidden z-10">
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center px-4 py-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-full text-xs font-semibold mb-6 uppercase tracking-wider">
+              <Users className="h-4 w-4 mr-2 text-indigo-400" />
+              Our Team
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+              Meet Our <span className="gradient-text-blue">Team</span>
+            </h2>
+            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+              The passionate minds behind{" "}
+              <span className="font-semibold text-indigo-600">
+                Sky Tech Makers
+              </span>
+              .
+            </p>
+          </motion.div>
+
+          <div className="flex justify-center items-center relative max-w-4xl mx-auto">
+            <CircularTestimonials
+              testimonials={team.map(member => ({
+                quote: member.description,
+                name: member.name,
+                designation: member.role,
+                src: member.image,
+              }))}
+              autoplay={true}
+              colors={{
+                name: "#0f172a",
+                designation: "#4f46e5",
+                testimony: "#475569",
+                arrowBackground: "#ffffff",
+                arrowForeground: "#1e293b",
+                arrowHoverBackground: "#6366f1",
+              }}
+              fontSizes={{
+                name: "28px",
+                designation: "18px",
+                quote: "16px",
+              }}
+            />
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
-      <section className="py-24 bg-transparent border-t border-white/5 relative z-10">
+      <section className="py-24 bg-white border-b border-slate-200 relative z-10">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -285,10 +342,14 @@ const Home = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Everything You Need to <span className="gradient-text">Excel</span>
+            <div className="inline-flex items-center px-4 py-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-full text-xs font-semibold mb-6 uppercase tracking-wider">
+              <Layers className="h-4 w-4 mr-2 text-indigo-400" />
+              Features
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+              Everything You Need to <span className="gradient-text-blue">Excel</span>
             </h2>
-            <p className="text-lg text-slate-400 max-w-3xl mx-auto">
+            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
               From interview preparation to advanced learning resources, we've
               got your entire tech journey covered.
             </p>
@@ -302,22 +363,22 @@ const Home = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="group bg-[#10121f] border border-white/7 rounded-2xl p-8 shadow-xl transition-all duration-300 hover:border-indigo-500/20 hover:bg-[#141729] hover:-translate-y-1.5"
+                className="group bg-slate-50 border border-slate-200/60 rounded-2xl p-8 shadow-sm transition-all duration-300 hover:border-indigo-500/20 hover:bg-white hover:shadow-xl hover:-translate-y-1.5"
               >
                 <div
                   className={`inline-flex items-center justify-center w-14 h-14 bg-gradient-to-r ${feature.color} rounded-2xl mb-6 shadow-lg group-hover:scale-105 transition-transform duration-300`}
                 >
                   <feature.icon className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">
+                <h3 className="text-xl font-bold text-slate-900 mb-3">
                   {feature.title}
                 </h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                <p className="text-slate-600 text-sm leading-relaxed mb-6">
                   {feature.description}
                 </p>
                 <Link
                   to={feature.link}
-                  className="inline-flex items-center text-indigo-400 font-semibold hover:text-indigo-300 transition-colors group-hover:gap-1.5 gap-1 transition-all duration-200"
+                  className="inline-flex items-center text-indigo-600 font-semibold hover:text-indigo-500 transition-colors group-hover:gap-1.5 gap-1 transition-all duration-200"
                 >
                   Explore Now
                   <ArrowRight className="h-4 w-4" />
@@ -329,7 +390,7 @@ const Home = () => {
       </section>
 
       {/* About Section */}
-      <section className="py-24 bg-[#0d0f1a]/40 border-t border-white/5 relative z-10">
+      <section className="py-24 bg-[#f4f6f8] border-b border-slate-200 relative z-10">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -344,11 +405,11 @@ const Home = () => {
                   Our Mission
                 </div>
 
-                <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6 leading-tight">
                   Empowering Developers to Reach New Heights
                 </h2>
 
-                <p className="text-base text-slate-400 mb-8 leading-relaxed">
+                <p className="text-base text-slate-600 mb-8 leading-relaxed">
                   We believe every developer deserves access to world-class
                   learning resources and a supportive community. Our platform
                   bridges the gap between learning and landing your dream job.
@@ -364,8 +425,8 @@ const Home = () => {
                       viewport={{ once: true }}
                       className="flex items-center space-x-3"
                     >
-                      <achievement.icon className="h-5 w-5 text-indigo-400 flex-shrink-0" />
-                      <span className="text-slate-300 text-sm">{achievement.text}</span>
+                      <achievement.icon className="h-5 w-5 text-indigo-600 flex-shrink-0" />
+                      <span className="text-slate-700 text-sm">{achievement.text}</span>
                     </motion.div>
                   ))}
                 </div>
@@ -390,18 +451,18 @@ const Home = () => {
                   <img
                     src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
                     alt="Developers collaborating"
-                    className="w-full h-[400px] object-cover rounded-2xl border border-white/8 shadow-2xl"
+                    className="w-full h-[400px] object-cover rounded-2xl border border-slate-200/80 shadow-2xl"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-2xl"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
                 </div>
 
-                <div className="absolute -bottom-6 -left-6 bg-[#10121f] border border-white/8 p-6 rounded-xl shadow-2xl">
+                <div className="absolute -bottom-6 -left-6 bg-white border border-slate-200/80 p-6 rounded-xl shadow-2xl">
                   <div className="flex items-center space-x-3">
                     <div className="bg-indigo-500/10 p-2.5 rounded-lg border border-indigo-500/20">
-                      <Coffee className="h-5 w-5 text-indigo-400" />
+                      <Coffee className="h-5 w-5 text-indigo-600" />
                     </div>
                     <div>
-                      <div className="font-bold text-white text-sm">
+                      <div className="font-bold text-slate-900 text-sm">
                         24/7 Learning
                       </div>
                       <div className="text-xs text-slate-500">
@@ -417,88 +478,17 @@ const Home = () => {
       </section>
 
       {/* Testimonials Section */}
-      <div className="border-t border-white/5 relative z-10">
+      <div className="bg-white border-b border-slate-200 relative z-10">
         <TestimonialsSection />
       </div>
 
-      {/* Course Section */}
-      <section className="container mx-auto mt-20 mb-28 px-4 relative z-10">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 mb-4">
-            <Zap className="w-3.5 h-3.5 text-indigo-400" />
-            <span className="text-xs font-semibold text-indigo-400 uppercase tracking-wider">Premium Content</span>
-          </div>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-            Our Featured <span className="gradient-text">Courses</span>
-          </h2>
-          <p className="text-slate-400 text-base max-w-2xl mx-auto leading-relaxed">
-            Explore high-quality, beginner-friendly tech tutorials in Tamil. Learn at your own pace with hands-on projects and step-by-step guidance.
-          </p>
-        </div>
 
-        <div className="flex flex-wrap justify-center gap-6 mt-10">
-          {courses.map((course, index) => (
-            <div
-              key={index}
-              className="bg-[#10121f] border border-white/7 rounded-2xl max-w-xs w-full shadow-xl shadow-black/30 hover:border-indigo-500/30 hover:shadow-indigo-500/5 transition-all duration-300 overflow-hidden flex flex-col group"
-            >
-              <div className="p-6 h-[420px] flex flex-col justify-between">
-                <div>
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-green-500/10 text-green-400 border border-green-500/20 uppercase tracking-wider">
-                      {course.level}
-                    </span>
-                    <img
-                      src={course.image}
-                      alt="course icon"
-                      className="w-8 h-8 rounded-lg object-contain bg-white/5 p-1 flex-shrink-0"
-                    />
-                  </div>
 
-                  <h3 className="text-lg font-bold text-white mt-2 group-hover:text-indigo-300 transition-colors leading-snug">
-                    {course.title}
-                  </h3>
 
-                  <p className="text-slate-400 mt-2 text-xs leading-relaxed line-clamp-3">
-                    {course.description}
-                  </p>
 
-                  <div className="mt-4 flex flex-wrap gap-1.5">
-                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-white/3 border border-white/5 text-[10px] text-slate-400 font-medium">
-                      ⏱ {course.duration.replace(" Duration", "")}
-                    </span>
-                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-white/3 border border-white/5 text-[10px] text-slate-400 font-medium">
-                      ❤️ {course.likes.replace(" Likes", "")}
-                    </span>
-                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-white/3 border border-white/5 text-[10px] text-slate-400 font-medium">
-                      📚 {course.topics.replace(" Topics", "")}
-                    </span>
-                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-white/3 border border-white/5 text-[10px] text-slate-400 font-medium">
-                      👨🏻‍💻 {course.project}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="mt-6">
-                  <a
-                    href={course.video}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-lg shadow-indigo-500/25 transition-all duration-300"
-                  >
-                    <ArrowRight className="w-3.5 h-3.5 order-last group-hover:translate-x-0.5 transition-transform" />
-                    Explore Video
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Team Section */}
-      <section className="py-24 bg-[#0d0f1a]/40 border-t border-white/5 relative overflow-hidden z-10">
-        <div className="container mx-auto px-4 relative z-10">
+      {/* Contact Section */}
+      <section className="py-24 bg-[#f4f6f8] border-t border-slate-200 relative overflow-hidden z-10">
+        <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -506,105 +496,205 @@ const Home = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Meet Our <span className="gradient-text">Team</span>
+            <div className="inline-flex items-center px-4 py-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-full text-xs font-semibold mb-6 uppercase tracking-wider">
+              <Mail className="h-4 w-4 mr-2 text-indigo-400" />
+              Contact Us
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+              Get in Touch <span className="gradient-text-blue">With Us</span>
             </h2>
-            <p className="text-lg text-slate-400 max-w-3xl mx-auto">
-              The passionate minds behind{" "}
-              <span className="font-semibold text-indigo-400">
-                Sky Tech Makers
-              </span>
-              .
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+              Have questions about our courses, blogs, or community? Drop us a line and we'll get back to you shortly.
             </p>
           </motion.div>
 
-          <div className="relative max-w-4xl mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 max-w-6xl mx-auto items-stretch">
+            {/* Contact Details */}
             <motion.div
-              key={currentMember}
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-              className={`flex flex-col ${team[currentMember].flip ? "md:flex-row-reverse" : "md:flex-row"
-                } items-center gap-10 bg-[#10121f] border border-white/8 shadow-2xl p-8 md:p-12 rounded-2xl`}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="lg:col-span-2 flex flex-col justify-between space-y-8"
             >
-              <img
-                src={team[currentMember].image}
-                alt={team[currentMember].name}
-                className="w-36 h-36 rounded-full object-cover border-4 border-indigo-500/20 shadow-xl flex-shrink-0"
-              />
-              <div className="text-left">
-                <h3 className="text-2xl text-white font-extrabold">
-                  {team[currentMember].name}
-                </h3>
-                <p className="text-sm text-indigo-400 font-semibold uppercase tracking-wider mt-1">
-                  {team[currentMember].role}
+              <div className="space-y-6">
+                <h3 className="text-2xl font-bold text-slate-900">Let's build something together</h3>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  Join our learning ecosystem. Whether you are a student wanting to learn or a developer looking to contribute, we are happy to connect.
                 </p>
-                <p className="mt-4 text-slate-400 text-sm leading-relaxed">
-                  {team[currentMember].description}
-                </p>
+              </div>
+
+              <div className="space-y-6">
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center justify-center w-12 h-12 bg-white border border-slate-200 rounded-xl shadow-sm text-indigo-600 flex-shrink-0">
+                    <Mail className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Email Address</h4>
+                    <a href="mailto:support@skytechmakers.com" className="text-slate-800 font-semibold hover:text-indigo-600 transition-colors">
+                      contact.skytechmakers@gmail.com
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center justify-center w-12 h-12 bg-white border border-slate-200 rounded-xl shadow-sm text-indigo-600 flex-shrink-0">
+                    <Globe className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Official Channel</h4>
+                    <a href="https://youtube.com/@SkyTechMakers" target="_blank" rel="noopener noreferrer" className="text-slate-800 font-semibold hover:text-indigo-600 transition-colors">
+                      https://www.youtube.com/@SkyTechMakers
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center justify-center w-12 h-12 bg-white border border-slate-200 rounded-xl shadow-sm text-indigo-600 flex-shrink-0">
+                    <Users className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Community Scope</h4>
+                    <span className="text-slate-800 font-semibold">Global Tamil Learning Network</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-xs text-slate-500 border-t border-slate-200/80 pt-6">
+                Response time: Typically within 24 hours.
               </div>
             </motion.div>
 
-            {/* Dots */}
-            <div className="flex justify-center mt-8 space-x-2">
-              {team.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentMember(index)}
-                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${index === currentMember
-                    ? "bg-indigo-500 scale-125 shadow-lg shadow-indigo-500/50"
-                    : "bg-white/10 hover:bg-white/20"
-                    }`}
-                />
-              ))}
-            </div>
+            {/* Contact Form Card */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="lg:col-span-3 bg-white border border-slate-200/80 shadow-2xl p-8 rounded-3xl flex flex-col justify-center"
+            >
+              {submitted ? (
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="text-center py-12 space-y-4"
+                >
+                  <div className="w-16 h-16 bg-green-500/10 border border-green-500/20 rounded-full flex items-center justify-center mx-auto text-green-600 shadow-sm">
+                    <CheckCircle className="h-8 w-8" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-slate-900">Message Sent!</h3>
+                  <p className="text-slate-600 text-sm max-w-sm mx-auto leading-relaxed">
+                    Thank you for reaching out. We've received your message and our team will get back to you shortly.
+                  </p>
+                  <button
+                    onClick={() => setSubmitted(false)}
+                    className="inline-flex items-center px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold tracking-wide transition-all"
+                  >
+                    Send Another Message
+                  </button>
+                </motion.div>
+              ) : (
+                <form onSubmit={handleFormSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label htmlFor="contact-name" className="text-xs font-semibold text-slate-700 uppercase tracking-wider">Your Name</label>
+                      <input
+                        type="text"
+                        id="contact-name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="John Doe"
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="contact-email" className="text-xs font-semibold text-slate-700 uppercase tracking-wider">Email Address</label>
+                      <input
+                        type="email"
+                        id="contact-email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="john@example.com"
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 relative" ref={selectRef}>
+                    <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider block">Related To</label>
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => setIsSelectOpen(!isSelectOpen)}
+                        className="w-full flex items-center justify-between px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm text-left cursor-pointer"
+                      >
+                        <span>{formData.subject}</span>
+                        <ChevronDown className={`h-4 w-4 text-slate-500 transition-transform duration-200 ${isSelectOpen ? "rotate-180" : ""}`} />
+                      </button>
+
+                      <AnimatePresence>
+                        {isSelectOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.15 }}
+                            className="absolute z-20 w-full mt-2 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden max-h-60 overflow-y-auto"
+                          >
+                            {subjectOptions.map((option) => (
+                              <button
+                                key={option}
+                                type="button"
+                                onClick={() => {
+                                  setFormData((prev) => ({ ...prev, subject: option }));
+                                  setIsSelectOpen(false);
+                                }}
+                                className={`w-full text-left px-4 py-3 text-sm transition-colors hover:bg-slate-50 cursor-pointer ${formData.subject === option
+                                  ? "bg-indigo-50/60 text-indigo-600 font-semibold"
+                                  : "text-slate-700"
+                                  }`}
+                              >
+                                {option}
+                              </button>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label htmlFor="contact-message" className="text-xs font-semibold text-slate-700 uppercase tracking-wider">Your Message</label>
+                    <textarea
+                      id="contact-message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      required
+                      rows={4}
+                      placeholder="Hi, I would like to query about..."
+                      className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm resize-y"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/20 transition-all disabled:opacity-50 cursor-pointer"
+                  >
+                    {isSubmitting ? "Sending Message..." : "Send Message"}
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                </form>
+              )}
+            </motion.div>
           </div>
         </div>
       </section>
-
-      {/* CTA Section */}
-      {!user && (
-        <section className="py-24 bg-gradient-to-b from-[#050508] to-[#0d0f1a] border-t border-white/5 relative z-10">
-          <div className="container mx-auto px-4 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                Ready to Transform Your Tech Career?
-              </h2>
-              <p className="text-lg mb-8 max-w-3xl mx-auto text-slate-400 leading-relaxed">
-                Join our elite community of developers and get access to premium
-                content, exclusive tools, and networking opportunities that will
-                accelerate your growth.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Link
-                  to="/register"
-                  className="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl font-bold hover:from-indigo-500 hover:to-violet-500 shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:scale-105"
-                >
-                  Start Your Journey Free
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <Link
-                  to="/login"
-                  className="inline-flex items-center px-8 py-4 border-2 border-white/10 text-slate-300 rounded-xl font-semibold hover:border-indigo-500/50 hover:text-indigo-400 transition-all duration-300"
-                >
-                  Sign In
-                </Link>
-              </div>
-
-              <div className="mt-8 text-xs text-slate-500 uppercase tracking-widest font-semibold">
-                Trusted by 560+ developers worldwide
-              </div>
-            </motion.div>
-          </div>
-        </section>
-      )}
     </div>
   );
 };

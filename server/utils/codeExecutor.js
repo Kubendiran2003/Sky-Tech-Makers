@@ -32,7 +32,9 @@ const cleanup = (files) => {
  */
 const runCommandWithTimeout = (cmd, args, stdinInput, timeoutMs) => {
   return new Promise((resolve) => {
-    const child = spawn(cmd, args, { cwd: scratchDir });
+    const isWindows = process.platform === "win32";
+    console.log(`[executor] Running: ${cmd} ${args.join(" ")} (shell=${isWindows})`);
+    const child = spawn(cmd, args, { cwd: scratchDir, shell: isWindows });
     
     let stdout = "";
     let stderr = "";

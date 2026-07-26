@@ -135,15 +135,15 @@ export default function AdminPanel() {
 
   if (user?.role !== "Admin") {
     return (
-      <div className="min-h-screen flex items-center justify-center relative overflow-hidden px-4">
-        <div className="absolute inset-0 grid-pattern opacity-25 pointer-events-none" />
-        <div className="relative glass-strong p-8 rounded-2xl shadow-2xl max-w-md w-full text-center border border-white/8 z-10">
-          <FiAlertTriangle className="mx-auto h-12 w-12 text-red-400 mb-4" />
-          <h3 className="text-xl font-bold text-white mb-2">Admin Access Required</h3>
-          <p className="text-slate-400 text-sm mb-4 leading-relaxed">
+      <div className="min-h-screen flex items-center justify-center relative overflow-hidden px-4 bg-[#f4f6f8]">
+        <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
+        <div className="relative bg-white border border-slate-200/80 p-8 rounded-2xl shadow-xl max-w-md w-full text-center z-10">
+          <FiAlertTriangle className="mx-auto h-12 w-12 text-red-500 mb-4" />
+          <h3 className="text-xl font-bold text-slate-900 mb-2">Admin Access Required</h3>
+          <p className="text-slate-500 text-sm mb-4 leading-relaxed font-medium">
             You don't have permission to access this workspace.
           </p>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-400">
             Please login with an administrator account to manage submissions.
           </p>
         </div>
@@ -153,10 +153,10 @@ export default function AdminPanel() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-[#f4f6f8]">
         <div className="text-center">
           <div className="w-12 h-12 border-2 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-500 text-sm">Loading admin panel...</p>
+          <p className="text-slate-500 text-sm font-semibold">Loading admin panel...</p>
         </div>
       </div>
     );
@@ -171,15 +171,15 @@ export default function AdminPanel() {
   const tabBtnClass = (tabName) =>
     `flex items-center gap-2 py-3 px-6 text-sm font-semibold rounded-xl transition-all duration-200 cursor-pointer ${
       activeTab === tabName
-        ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-lg shadow-indigo-500/5"
-        : "text-slate-400 hover:text-slate-300 hover:bg-white/5 border border-transparent"
+        ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/10"
+        : "text-slate-600 hover:text-slate-800 hover:bg-slate-200/40"
     }`;
 
   return (
-    <div className="min-h-screen relative overflow-hidden px-4 py-16">
+    <div className="min-h-screen relative overflow-hidden px-4 py-16 bg-[#f4f6f8]">
       {/* Background decoration */}
-      <div className="absolute inset-0 grid-pattern opacity-25 pointer-events-none" />
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-600/6 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative max-w-6xl mx-auto">
         {/* Header */}
@@ -190,13 +190,13 @@ export default function AdminPanel() {
           className="mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
         >
           <div>
-            <h1 className="text-3xl font-bold text-white">Admin Panel</h1>
+            <h1 className="text-3xl font-bold text-slate-900">Admin Panel</h1>
             <p className="text-slate-500 text-sm mt-1">Manage content submissions, approvals and prize winners</p>
           </div>
 
           <button
             onClick={handleRefresh}
-            className="flex items-center gap-2 px-4 py-2.5 bg-[#131524] border border-white/8 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:border-white/20 transition-all duration-200"
+            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-50 transition-all duration-200 shadow-sm"
           >
             <FiRefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
             Refresh Data
@@ -208,33 +208,33 @@ export default function AdminPanel() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 p-4 bg-red-500/8 border border-red-500/20 rounded-xl flex items-center"
+            className="mb-6 p-4 bg-red-50/8 border border-red-200 rounded-xl flex items-center"
           >
-            <FiAlertTriangle className="h-5 w-5 text-red-400 mr-3 flex-shrink-0" />
+            <FiAlertTriangle className="h-5 w-5 text-red-500 mr-3 flex-shrink-0" />
             <div>
-              <h3 className="text-sm font-semibold text-red-400">Loading Error</h3>
+              <h3 className="text-sm font-semibold text-red-600">Loading Error</h3>
               <p className="text-xs text-red-500 mt-0.5">{error}</p>
             </div>
           </motion.div>
         )}
 
         {/* Tabs Bar */}
-        <div className="bg-[#10121f] border border-white/7 rounded-2xl p-1.5 mb-8 flex flex-col sm:flex-row gap-1">
+        <div className="bg-slate-200/60 border border-slate-200 rounded-2xl p-1.5 mb-8 flex flex-col sm:flex-row gap-1">
           <button onClick={() => setActiveTab("blogs")} className={tabBtnClass("blogs")}>
             Blogs
-            <span className="text-[10px] px-2 py-0.5 rounded-md bg-white/5 border border-white/8 text-slate-400 font-bold">
+            <span className={`text-[10px] px-2 py-0.5 rounded-md font-bold transition-colors ${activeTab === 'blogs' ? 'bg-indigo-700/50 text-indigo-100' : 'bg-slate-200 border border-slate-300 text-slate-600'}`}>
               {pendingBlogs.length}
             </span>
           </button>
           <button onClick={() => setActiveTab("questions")} className={tabBtnClass("questions")}>
             Questions
-            <span className="text-[10px] px-2 py-0.5 rounded-md bg-white/5 border border-white/8 text-slate-400 font-bold">
+            <span className={`text-[10px] px-2 py-0.5 rounded-md font-bold transition-colors ${activeTab === 'questions' ? 'bg-indigo-700/50 text-indigo-100' : 'bg-slate-200 border border-slate-300 text-slate-600'}`}>
               {pendingQuestions.length}
             </span>
           </button>
           <button onClick={() => setActiveTab("winners")} className={tabBtnClass("winners")}>
             Coding Winners
-            <span className="text-[10px] px-2 py-0.5 rounded-md bg-white/5 border border-white/8 text-slate-400 font-bold">
+            <span className={`text-[10px] px-2 py-0.5 rounded-md font-bold transition-colors ${activeTab === 'winners' ? 'bg-indigo-700/50 text-indigo-100' : 'bg-slate-200 border border-slate-300 text-slate-600'}`}>
               {winners.length}
             </span>
           </button>
@@ -243,11 +243,11 @@ export default function AdminPanel() {
         {/* Content list */}
         {activeTab === "blogs" ? (
           pendingBlogs.length === 0 ? (
-            <div className="text-center py-16 bg-[#10121f] border border-white/7 rounded-2xl">
+            <div className="text-center py-16 bg-white border border-slate-200/80 rounded-2xl shadow-sm">
               <div className="w-14 h-14 bg-green-500/10 border border-green-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <FiCheck className="w-7 h-7 text-green-400" />
+                <FiCheck className="w-7 h-7 text-green-600" />
               </div>
-              <h3 className="text-lg font-bold text-white mb-1.5">No blogs pending approval</h3>
+              <h3 className="text-lg font-bold text-slate-800 mb-1.5">No blogs pending approval</h3>
               <p className="text-slate-500 text-sm">All blogs have been reviewed and approved.</p>
             </div>
           ) : (
@@ -257,19 +257,19 @@ export default function AdminPanel() {
                   key={blog._id}
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-[#10121f] border border-white/7 rounded-2xl p-6 hover:border-indigo-500/20 transition-all duration-200"
+                  className="bg-white border border-slate-200/80 rounded-2xl p-6 hover:border-indigo-500/20 transition-all duration-200 shadow-sm"
                 >
                   <div className="flex flex-col md:flex-row justify-between items-start gap-4">
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-bold text-white truncate">{blog.title}</h3>
-                      <p className="mt-2 text-slate-400 text-sm leading-relaxed line-clamp-2">{blog.content}</p>
+                      <h3 className="text-lg font-bold text-slate-900 truncate">{blog.title}</h3>
+                      <p className="mt-2 text-slate-600 text-sm leading-relaxed line-clamp-2">{blog.content}</p>
 
                       {blog.tags?.length > 0 && (
                         <div className="mt-4 flex flex-wrap gap-1.5">
                           {blog.tags.map((tag) => (
                             <span
                               key={tag}
-                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase tracking-wider"
+                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/10 text-indigo-600 border border-indigo-500/20 uppercase tracking-wider"
                             >
                               {tag}
                             </span>
@@ -284,7 +284,7 @@ export default function AdminPanel() {
                       </div>
                     </div>
 
-                    <div className="flex md:flex-col gap-2 justify-end w-full md:w-auto pt-4 md:pt-0 border-t border-white/5 md:border-0">
+                    <div className="flex md:flex-col gap-2 justify-end w-full md:w-auto pt-4 md:pt-0 border-t border-slate-100 md:border-0">
                       <button
                         onClick={() => handleApproveBlog(blog._id)}
                         className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-green-600 hover:bg-green-500 rounded-xl transition duration-200 shadow-lg shadow-green-600/20"
@@ -305,11 +305,11 @@ export default function AdminPanel() {
           )
         ) : activeTab === "questions" ? (
           pendingQuestions.length === 0 ? (
-            <div className="text-center py-16 bg-[#10121f] border border-white/7 rounded-2xl">
+            <div className="text-center py-16 bg-white border border-slate-200/80 rounded-2xl shadow-sm">
               <div className="w-14 h-14 bg-green-500/10 border border-green-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <FiCheck className="w-7 h-7 text-green-400" />
+                <FiCheck className="w-7 h-7 text-green-600" />
               </div>
-              <h3 className="text-lg font-bold text-white mb-1.5">No questions pending approval</h3>
+              <h3 className="text-lg font-bold text-slate-800 mb-1.5">No questions pending approval</h3>
               <p className="text-slate-500 text-sm">All questions have been reviewed and approved.</p>
             </div>
           ) : (
@@ -319,19 +319,19 @@ export default function AdminPanel() {
                   key={question._id}
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-[#10121f] border border-white/7 rounded-2xl p-6"
+                  className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm"
                 >
                   <div className="flex flex-col md:flex-row justify-between items-start gap-4">
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-bold text-white leading-relaxed">{question.question}</h3>
-                      <p className="mt-3 text-slate-400 text-sm leading-relaxed">
-                        <span className="text-indigo-400 font-bold uppercase tracking-wider text-[10px] block mb-1">Suggested Answer</span>
+                      <h3 className="text-lg font-bold text-slate-900 leading-relaxed">{question.question}</h3>
+                      <p className="mt-3 text-slate-600 text-sm leading-relaxed">
+                        <span className="text-indigo-600 font-bold uppercase tracking-wider text-[10px] block mb-1">Suggested Answer</span>
                         {question.answer}
                       </p>
 
                       <div className="mt-4 flex flex-wrap gap-1.5">
                         {question.company && (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase tracking-wider">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/10 text-indigo-600 border border-indigo-500/20 uppercase tracking-wider">
                             <FiBriefcase className="w-2.5 h-2.5" /> {question.company}
                           </span>
                         )}
@@ -349,7 +349,7 @@ export default function AdminPanel() {
                       </div>
                     </div>
 
-                    <div className="flex md:flex-col gap-2 justify-end w-full md:w-auto pt-4 md:pt-0 border-t border-white/5 md:border-0">
+                    <div className="flex md:flex-col gap-2 justify-end w-full md:w-auto pt-4 md:pt-0 border-t border-slate-100 md:border-0">
                       <button
                         onClick={() => handleApproveQuestion(question._id)}
                         className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-green-600 hover:bg-green-500 rounded-xl transition duration-200 shadow-lg shadow-green-600/20"
@@ -369,10 +369,10 @@ export default function AdminPanel() {
             </div>
           )
         ) : (
-          <div className="bg-[#10121f] border border-white/7 rounded-2xl p-6 overflow-x-auto scrollbar-thin">
+          <div className="bg-white border border-slate-200/80 rounded-2xl p-6 overflow-x-auto scrollbar-thin shadow-sm">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                <FiAward className="text-indigo-400" /> Daily Challenge Leaders & Winners Details
+              <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <FiAward className="text-indigo-600" /> Daily Challenge Leaders & Winners Details
               </h2>
             </div>
             {winners.length === 0 ? (
@@ -380,9 +380,9 @@ export default function AdminPanel() {
                 No users have completed any challenges yet.
               </div>
             ) : (
-              <table className="w-full text-left border-collapse text-sm text-slate-300 min-w-[700px]">
+              <table className="w-full text-left border-collapse text-sm text-slate-655 min-w-[700px]">
                 <thead>
-                  <tr className="border-b border-white/8 bg-white/2 text-slate-400 uppercase text-[10px] tracking-wider font-bold">
+                  <tr className="border-b border-slate-200 bg-slate-50 text-slate-500 uppercase text-[10px] tracking-wider font-bold">
                     <th className="py-3 px-4 rounded-l-xl">Rank</th>
                     <th className="py-3 px-4">Name</th>
                     <th className="py-3 px-4">Email</th>
@@ -392,18 +392,18 @@ export default function AdminPanel() {
                     <th className="py-3 px-4 text-right rounded-r-xl">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-slate-100">
                   {winners.map((entry) => (
-                    <tr key={entry.user.id} className="hover:bg-white/2 transition duration-200">
-                      <td className="py-3.5 px-4 font-bold text-white">
+                    <tr key={entry.user.id} className="hover:bg-slate-50/50 transition duration-200">
+                      <td className="py-3.5 px-4 font-bold text-slate-600">
                         {entry.rank === 1 ? "🥇 1" : entry.rank === 2 ? "🥈 2" : entry.rank === 3 ? "🥉 3" : entry.rank}
                       </td>
-                      <td className="py-3.5 px-4 font-bold text-white">{entry.user.name}</td>
+                      <td className="py-3.5 px-4 font-bold text-slate-800">{entry.user.name}</td>
                       <td className="py-3.5 px-4 font-mono text-xs text-slate-500">{entry.user.email}</td>
                       <td className="py-3.5 px-4 font-mono text-xs text-slate-500">{entry.user.rollNumber}</td>
-                      <td className="py-3.5 px-4 text-center font-bold text-indigo-400">{entry.solvedCount} / 30</td>
+                      <td className="py-3.5 px-4 text-center font-bold text-blue-600">{entry.solvedCount} / 30</td>
                       <td className="py-3.5 px-4 text-center font-mono text-xs text-slate-500 flex items-center justify-center gap-1">
-                        <FiClock className="w-3 h-3 text-slate-600" />
+                        <FiClock className="w-3 h-3 text-slate-400" />
                         {Math.floor(entry.totalTime / 60)}m {entry.totalTime % 60}s
                       </td>
                       <td className="py-3.5 px-4 text-right">
@@ -413,7 +413,7 @@ export default function AdminPanel() {
                               navigator.clipboard.writeText(entry.user.email);
                               toast.success("Email copied to clipboard!");
                             }}
-                            className="inline-flex items-center p-2 bg-[#131524] border border-white/8 rounded-lg text-slate-400 hover:text-white transition-all text-xs"
+                            className="inline-flex items-center p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-500 hover:text-slate-700 transition-all text-xs shadow-sm"
                             title="Copy Email"
                           >
                             <FiCopy />

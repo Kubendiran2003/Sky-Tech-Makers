@@ -149,8 +149,9 @@ exports.runCode = async (req, res) => {
 
     res.json({ results });
   } catch (error) {
-    console.error("Error in runCode:", error);
-    res.status(500).json({ msg: "Server error during code compilation/execution." });
+    console.error("[runCode] ERROR:", error.message);
+    console.error("[runCode] STACK:", error.stack);
+    res.status(500).json({ msg: "Server error during code compilation/execution.", detail: error.message });
   }
 };
 
@@ -229,8 +230,9 @@ exports.submitCode = async (req, res) => {
       submission,
     });
   } catch (error) {
-    console.error("Error in submitCode:", error);
-    res.status(500).json({ msg: "Server error during submission." });
+    console.error("[submitCode] ERROR:", error.message);
+    console.error("[submitCode] STACK:", error.stack);
+    res.status(500).json({ msg: "Server error during submission.", detail: error.message });
   }
 };
 

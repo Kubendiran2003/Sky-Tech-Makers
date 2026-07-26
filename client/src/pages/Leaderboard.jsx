@@ -39,120 +39,20 @@ import {
 } from "../services/challenges";
 
 export default function LeaderboardPage() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   // Navigation tabs: 'challenge' | 'leaderboard'
   const [activeTab, setActiveTab] = useState("challenge");
 
-  // Auth Guard
-  if (!user) {
-    return (
-      <div className="min-h-screen relative overflow-hidden bg-[#050508] text-slate-100 flex items-center justify-center py-20 px-4">
-        {/* Background Grid Pattern */}
-        <div className="absolute inset-0 grid-pattern opacity-25 pointer-events-none" />
-        {/* Glowing Background Blurs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-10 items-center z-10">
-          
-          {/* Left Column: Challenge Perks & Info */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-left"
-          >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 mb-6">
-              <FiUnlock className="w-3.5 h-3.5 text-indigo-400" />
-              <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">Sky Test Challenge</span>
-            </div>
-            
-            <h1 className="text-4xl font-extrabold text-white leading-tight mb-4">
-              Unlock Your <br className="hidden sm:inline" />
-              <span className="gradient-text">Coding Potential</span>
-            </h1>
-            
-            <p className="text-slate-400 text-sm leading-relaxed mb-8">
-              Join the 30-day coding challenge. Master logic in JavaScript, Python, C, C++, or Java. Complete tests in a proctored environment, rank up live, and secure exclusive giveaways.
-            </p>
-            
-            <div className="space-y-4">
-              {[
-                { icon: FiCode, title: "Multi-Language Compiler", desc: "Write solutions in JS, Python, C, C++, or Java" },
-                { icon: FiCheckCircle, title: "Real-time Proctoring", desc: "Anti-cheat window detection matching real assessments" },
-                { icon: FiGift, title: "Exclusive Gifts", desc: "Rank #1 on the leaderboard to win custom T-Shirts" },
-              ].map((perk, i) => (
-                <motion.div
-                  key={perk.title}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 + 0.3 }}
-                  className="flex items-start gap-3.5"
-                >
-                  <div className="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <perk.icon className="w-4 h-4 text-indigo-400" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-white leading-none">{perk.title}</h3>
-                    <p className="text-slate-500 text-xs mt-1">{perk.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Right Column: Beautiful Lock Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-          >
-            <div className="glass-strong rounded-2xl p-8 shadow-2xl shadow-black/50 text-center border border-white/8 relative overflow-hidden group">
-              {/* Card visual elements */}
-              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-indigo-500/10 to-transparent blur-xl pointer-events-none" />
-              
-              <div className="mx-auto w-16 h-16 bg-red-500/10 text-red-400 border border-red-500/20 flex items-center justify-center rounded-2xl mb-6 relative">
-                <div className="absolute inset-0 bg-red-500/5 rounded-2xl animate-pulse" />
-                <FiLock className="w-7 h-7 relative z-10" />
-              </div>
-              
-              <h2 className="text-2xl font-bold text-white mb-2">Coding Challenge Locked</h2>
-              <p className="text-slate-400 text-xs leading-relaxed mb-8 px-2">
-                A valid account is required to participate. Log in or create an account to start your challenge.
-              </p>
-              
-              <div className="flex flex-col gap-3">
-                <Link
-                  to="/login"
-                  className="w-full flex items-center justify-center gap-1.5 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-lg shadow-indigo-500/25 transition-all duration-300"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/register"
-                  className="w-full flex items-center justify-center gap-1.5 py-3 rounded-xl text-sm font-bold text-slate-300 bg-[#131524] border border-white/8 hover:text-white hover:border-white/20 transition-all duration-200"
-                >
-                  Create Free Account
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-
-        </div>
-      </div>
-    );
-  }
-
-  // State variables for Challenge tab
+  // State variables for Challenge tab — ALL hooks must be declared before any return
   const [userStatus, setUserStatus] = useState({ currentDay: 1, solvedDays: [], completedAll: false });
   const [selectedDay, setSelectedDay] = useState(1);
   const [challengeData, setChallengeData] = useState(null);
   const [code, setCode] = useState("");
   const [language, setLanguage] = useState("javascript");
   const [loadingChallenge, setLoadingChallenge] = useState(false);
-  
+
   // Real-Time HackerRank test environment states
   const [testStarted, setTestStarted] = useState(false);
   const [isDisqualified, setIsDisqualified] = useState(false);
@@ -166,6 +66,7 @@ export default function LeaderboardPage() {
   // Time tracker (5 minutes countdown)
   const [timeLeft, setTimeLeft] = useState(300);
   const timerRef = useRef(null);
+  const isDisqualifying = useRef(false);
 
   // Leaderboard states
   const [rankings, setRankings] = useState([]);
@@ -181,11 +82,13 @@ export default function LeaderboardPage() {
   const [giftPhone, setGiftPhone] = useState("");
   const [giftClaimed, setGiftClaimed] = useState(false);
 
-  // Initialize status & load default challenge
+  // Initialize status & load default challenge — only when user is logged in
   useEffect(() => {
-    fetchUserStatus();
-    fetchLeaderboardData();
-  }, []);
+    if (user) {
+      fetchUserStatus();
+      fetchLeaderboardData();
+    }
+  }, [user]);
 
   // Sync challenge code when day or language changes
   useEffect(() => {
@@ -194,20 +97,19 @@ export default function LeaderboardPage() {
     }
   }, [challengeData, language]);
 
-  const isDisqualifying = useRef(false);
 
   const handleCheat = async (reason = "exited the test window") => {
     if (isDisqualifying.current || isDisqualified) return;
     isDisqualifying.current = true;
     setIsDisqualified(true);
     toast.error(`Test Terminated: You ${reason}.`);
-    
+
     if (document.fullscreenElement) {
       try {
         await document.exitFullscreen();
-      } catch (e) {}
+      } catch (e) { }
     }
-    
+
     try {
       await disqualifyChallenge(selectedDay);
       fetchUserStatus();
@@ -305,7 +207,7 @@ export default function LeaderboardPage() {
       const data = await getChallenge(day);
       setChallengeData(data);
       setCode(data.templates[language] || "");
-      
+
       // Dynamic timer allocation: Easy = 5m (300s), Medium = 10m (600s), Hard = 15m (900s)
       let timeAllocated = 300;
       if (data.difficulty === "Medium") timeAllocated = 600;
@@ -332,10 +234,10 @@ export default function LeaderboardPage() {
 
   const handleStartTest = () => {
     const element = document.documentElement;
-    const requestMethod = element.requestFullscreen || 
-                          element.webkitRequestFullscreen || 
-                          element.mozRequestFullScreen || 
-                          element.msRequestFullscreen;
+    const requestMethod = element.requestFullscreen ||
+      element.webkitRequestFullscreen ||
+      element.mozRequestFullScreen ||
+      element.msRequestFullscreen;
 
     if (requestMethod) {
       requestMethod.call(element)
@@ -385,7 +287,9 @@ export default function LeaderboardPage() {
         toast.error("Some sample test cases failed.");
       }
     } catch (err) {
-      toast.error("Error executing code.");
+      const msg = err.response?.data?.detail || err.response?.data?.msg || "Error executing code.";
+      toast.error(`Run Error: ${msg}`);
+      console.error('[handleRunCode]', err.response?.data || err.message);
     } finally {
       setRunning(false);
     }
@@ -407,7 +311,7 @@ export default function LeaderboardPage() {
       if (result.success) {
         toast.success("Challenge Completed! Next day unlocked.");
         if (document.fullscreenElement) {
-          document.exitFullscreen().catch(() => {});
+          document.exitFullscreen().catch(() => { });
         }
         setTestStarted(false);
         setIsDisqualified(false);
@@ -418,7 +322,9 @@ export default function LeaderboardPage() {
         toast.error("Hidden test cases failed. Keep trying!");
       }
     } catch (err) {
-      toast.error("Error submitting code.");
+      const msg = err.response?.data?.detail || err.response?.data?.msg || "Error submitting code.";
+      toast.error(`Submit Error: ${msg}`);
+      console.error('[handleSubmitCode]', err.response?.data || err.message);
     } finally {
       setSubmitting(false);
     }
@@ -462,8 +368,8 @@ export default function LeaderboardPage() {
     const myRank = myRanking ? myRanking.rank : null;
 
     return (
-      <div className="bg-[#12131a] border border-[#20232a] rounded-xl p-5 text-center shadow-xl sticky top-24">
-        <div className="w-full aspect-square bg-[#1b1c26] rounded-lg overflow-hidden mb-4 border border-[#272a37] flex items-center justify-center relative group">
+      <div className="bg-white border border-slate-200/80 rounded-xl p-5 text-center shadow-xl sticky top-24">
+        <div className="w-full aspect-square bg-slate-50 rounded-lg overflow-hidden mb-4 border border-slate-200 flex items-center justify-center relative group">
           <img
             src="/tshirt.png"
             alt="Sky Tech Makers Printed T-Shirt Gift"
@@ -474,27 +380,27 @@ export default function LeaderboardPage() {
           </div>
         </div>
 
-        <h3 className="text-lg font-extrabold text-white mb-1">
+        <h3 className="text-lg font-extrabold text-slate-800 mb-1">
           Sky Tech Makers T-Shirt
         </h3>
-        <p className="text-xs text-gray-400 mb-4 leading-relaxed text-left">
+        <p className="text-xs text-slate-600 mb-4 leading-relaxed text-left">
           We offer a free giveaway of this premium custom printed black T-shirt to the Rank 🥇 1 user on the Leaderboard. Complete all 30 days of challenges to secure your place. The final winner will be contacted via email.
         </p>
 
         {/* Rank display */}
-        <div className="mb-4 p-3 bg-[#181a24] border border-[#272a37] rounded-lg text-center">
-          <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-1">Your Current Position</span>
+        <div className="mb-4 p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Your Current Position</span>
           {myRank === 1 ? (
-            <div className="text-sm font-extrabold text-yellow-400 flex items-center justify-center gap-1">
+            <div className="text-sm font-extrabold text-yellow-500 flex items-center justify-center gap-1">
               🥇 Rank 1 (Current Leader!)
             </div>
           ) : myRank ? (
-            <div className="text-sm font-bold text-blue-400">
+            <div className="text-sm font-bold text-indigo-600">
               Rank #{myRank}
-              <span className="text-[10px] text-gray-500 block font-normal mt-1">Climb to Rank 1 to win the T-Shirt!</span>
+              <span className="text-[10px] text-slate-500 block font-normal mt-1">Climb to Rank 1 to win the T-Shirt!</span>
             </div>
           ) : (
-            <div className="text-xs text-gray-500 font-semibold">
+            <div className="text-xs text-slate-500 font-semibold">
               Unranked (Solve today's code to enter)
             </div>
           )}
@@ -502,11 +408,11 @@ export default function LeaderboardPage() {
 
         {/* Progress bar */}
         <div className="mb-3">
-          <div className="flex justify-between text-xs font-semibold mb-1 text-gray-300">
+          <div className="flex justify-between text-xs font-semibold mb-1 text-slate-700">
             <span>Your Progress</span>
             <span>{userStatus.solvedDays.length} / 30 solved</span>
           </div>
-          <div className="w-full bg-[#1e202b] h-2.5 rounded-full overflow-hidden border border-[#2c304a]">
+          <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden border border-slate-200">
             <div
               className="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-full transition-all duration-500"
               style={{ width: `${(userStatus.solvedDays.length / 30) * 100}%` }}
@@ -518,47 +424,126 @@ export default function LeaderboardPage() {
   };
 
   // Check locks for dashboard landing page
-  const nextActiveDay = userStatus.currentDay; 
+  const nextActiveDay = userStatus.currentDay;
   const nextActiveDayStatus = userStatus.daysStatus?.find(ds => ds.day === nextActiveDay);
   const isNextActiveDayOpen = nextActiveDayStatus ? nextActiveDayStatus.isDateUnlocked : true;
 
+  // ----- Auth Loading: show spinner while checking session -----
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#f4f6f8] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-4 border-indigo-500/30 border-t-indigo-600 rounded-full animate-spin" />
+          <p className="text-slate-500 text-sm font-medium">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ----- Not Logged In: locked marketing page -----
+  if (!user) {
+    return (
+      <div className="min-h-screen relative overflow-hidden bg-[#f4f6f8] text-slate-800 flex items-center justify-center py-20 px-4">
+        <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-violet-500/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-10 items-center z-10">
+          {/* Left Column */}
+          <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 mb-6">
+              <FiUnlock className="w-3.5 h-3.5 text-indigo-400" />
+              <span className="text-xs font-bold text-indigo-450 uppercase tracking-wider">Sky Test Challenge</span>
+            </div>
+            <h1 className="text-4xl font-extrabold text-slate-900 leading-tight mb-4">
+              Unlock Your <br className="hidden sm:inline" />
+              <span className="gradient-text-blue">Coding Potential</span>
+            </h1>
+            <p className="text-slate-600 text-sm leading-relaxed mb-8">
+              Join the 30-day coding challenge. Master logic in JavaScript, Python, C, C++, or Java. Complete tests in a proctored environment, rank up live, and secure exclusive giveaways.
+            </p>
+            <div className="space-y-4">
+              {[
+                { icon: FiCode, title: "Multi-Language Compiler", desc: "Write solutions in JS, Python, C, C++, or Java" },
+                { icon: FiCheckCircle, title: "Real-time Proctoring", desc: "Anti-cheat window detection matching real assessments" },
+                { icon: FiGift, title: "Exclusive Gifts", desc: "Rank #1 on the leaderboard to win custom T-Shirts" },
+              ].map((perk, i) => (
+                <motion.div key={perk.title} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 + 0.3 }} className="flex items-start gap-3.5">
+                  <div className="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <perk.icon className="w-4 h-4 text-indigo-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-800 leading-none">{perk.title}</h3>
+                    <p className="text-slate-500 text-xs mt-1">{perk.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Right Column: Lock Card */}
+          <motion.div initial={{ opacity: 0, y: 30, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}>
+            <div className="bg-white rounded-2xl p-8 shadow-xl text-center border border-slate-200/80 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-indigo-500/5 to-transparent blur-xl pointer-events-none" />
+              <div className="mx-auto w-16 h-16 bg-red-500/10 text-red-500 border border-red-500/20 flex items-center justify-center rounded-2xl mb-6 relative">
+                <div className="absolute inset-0 bg-red-500/5 rounded-2xl animate-pulse" />
+                <FiLock className="w-7 h-7 relative z-10" />
+              </div>
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">Coding Challenge Locked</h2>
+              <p className="text-slate-500 text-xs leading-relaxed mb-8 px-2">
+                A valid account is required to participate. Log in or create an account to start your challenge.
+              </p>
+              <div className="flex flex-col gap-3">
+                <Link to="/login" state={{ from: { pathname: "/leaderboard" } }} className="w-full flex items-center justify-center gap-1.5 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-lg shadow-indigo-500/25 transition-all duration-300">
+                  Sign In
+                </Link>
+                <Link to="/register" state={{ from: { pathname: "/leaderboard" } }} className="w-full flex items-center justify-center gap-1.5 py-3 rounded-xl text-sm font-bold text-slate-500 bg-slate-50 border border-slate-200 hover:text-slate-800 hover:bg-slate-100 transition-all duration-200">
+                  Create Free Account
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
+  // ----- Logged In: Full Leaderboard / Challenge Workspace -----
   return (
-    <div className="min-h-screen bg-[#0a0b0d] text-gray-200 py-20 px-4 md:px-8 font-sans">
+    <div className="min-h-screen bg-[#f4f6f8] text-slate-800 py-20 px-4 md:px-8 font-sans">
       <div className="max-w-7xl mx-auto">
-        
+
         {/* Render normal header only if NOT in fullscreen test */}
         {!testStarted && (
-          <div className="flex flex-col md:flex-row justify-between items-center border-b border-[#20232a] pb-6 mb-8 gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-center border-b border-slate-200 pb-6 mb-8 gap-4">
             <div>
-              <h1 className="text-3xl font-extrabold text-white tracking-tight flex items-center gap-2">
-                <span className="bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+                <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                   Daily Coding Challenge
                 </span>
               </h1>
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-sm text-slate-500 mt-1">
                 Test your logic from Monday to Saturday, unlock hard challenges, and win custom gifts!
               </p>
             </div>
-            
+
             {/* Tab selectors */}
-            <div className="flex bg-[#12131a] p-1 rounded-lg border border-[#20232a]">
+            <div className="flex bg-slate-200/60 p-1 rounded-lg border border-slate-200">
               <button
                 onClick={() => setActiveTab("challenge")}
-                className={`px-5 py-2 text-sm font-semibold rounded-md transition-all duration-200 ${
-                  activeTab === "challenge"
+                className={`px-5 py-2 text-sm font-semibold rounded-md transition-all duration-200 ${activeTab === "challenge"
                     ? "bg-blue-600 text-white shadow-md shadow-blue-600/10"
-                    : "text-gray-400 hover:text-white"
-                }`}
+                    : "text-slate-600 hover:text-slate-900"
+                  }`}
               >
                 Workspace
               </button>
               <button
                 onClick={() => setActiveTab("leaderboard")}
-                className={`px-5 py-2 text-sm font-semibold rounded-md transition-all duration-200 ${
-                  activeTab === "leaderboard"
+                className={`px-5 py-2 text-sm font-semibold rounded-md transition-all duration-200 ${activeTab === "leaderboard"
                     ? "bg-blue-600 text-white shadow-md shadow-blue-600/10"
-                    : "text-gray-400 hover:text-white"
-                }`}
+                    : "text-slate-600 hover:text-slate-900"
+                  }`}
               >
                 Leader Board
               </button>
@@ -569,54 +554,54 @@ export default function LeaderboardPage() {
         {/* WORKSPACE TAB */}
         {activeTab === "challenge" && (
           <div className="flex flex-col gap-6">
-            
+
             {/* 1. DISQUALIFIED SCREEN */}
             {isDisqualified ? (
-              <div className="flex flex-col items-center justify-center py-24 bg-red-950/15 border border-red-500/20 rounded-xl p-8 max-w-2xl mx-auto text-center shadow-2xl">
-                <FiAlertTriangle className="w-16 h-16 text-red-500 mb-6 animate-bounce" />
-                <h2 className="text-2xl font-extrabold text-white mb-3">Test Terminated / Disqualified</h2>
-                <p className="text-red-300 text-sm mb-8 leading-relaxed">
+              <div className="flex flex-col items-center justify-center py-24 bg-red-50/70 border border-red-200/80 rounded-2xl p-8 max-w-2xl mx-auto text-center shadow-xl">
+                <FiAlertTriangle className="w-16 h-16 text-red-600 mb-6 animate-bounce" />
+                <h2 className="text-2xl font-extrabold text-red-800 mb-3">Test Terminated / Disqualified</h2>
+                <p className="text-red-700/80 text-sm mb-8 leading-relaxed font-semibold">
                   You exited the test window, switched tabs, or ran out of time. Your session has been terminated and disqualified. You cannot retry or retake today's challenge. Please return to the dashboard and wait for tomorrow's challenge to open.
                 </p>
                 <button
                   onClick={handleReturnToDashboard}
-                  className="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition shadow-lg shadow-red-600/25 text-sm"
+                  className="px-8 py-3 bg-red-600 hover:bg-red-550 text-white font-bold rounded-xl transition shadow-lg shadow-red-600/20 text-sm"
                 >
-                  Return to Dashboard
+                  Return to Leaderboard
                 </button>
               </div>
             ) : !testStarted ? (
-              
+
               /* 30-DAY COMPLETED SCREEN */
               (userStatus.completedAll || userStatus.solvedDays.length >= 30) ? (
-                <div className="flex flex-col items-center justify-center py-16 bg-[#10121f] border border-white/8 rounded-2xl p-8 max-w-2xl mx-auto text-center shadow-2xl relative overflow-hidden">
+                <div className="flex flex-col items-center justify-center py-16 bg-white border border-slate-200/80 rounded-2xl p-8 max-w-2xl mx-auto text-center shadow-xl relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent blur-xl pointer-events-none" />
-                  
-                  <div className="w-20 h-20 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center rounded-2xl mb-6 relative">
+
+                  <div className="w-20 h-20 bg-indigo-500/10 text-indigo-600 border border-indigo-500/20 flex items-center justify-center rounded-2xl mb-6 relative">
                     <div className="absolute inset-0 bg-indigo-500/5 rounded-2xl animate-ping" />
-                    <FiAward className="w-10 h-10 text-indigo-400" />
+                    <FiAward className="w-10 h-10 text-indigo-600" />
                   </div>
-                  
-                  <h2 className="text-3xl font-extrabold text-white mb-3">1st Month Challenge Completed!</h2>
-                  <p className="text-slate-400 text-sm mb-6 max-w-md mx-auto leading-relaxed">
+
+                  <h2 className="text-3xl font-extrabold text-slate-900 mb-3">1st Month Challenge Completed!</h2>
+                  <p className="text-slate-600 text-sm mb-6 max-w-md mx-auto leading-relaxed">
                     Amazing achievement! You have successfully solved all 30 days of the Sky Test Challenge.
                   </p>
-                  
+
                   {/* Rank Display & Claim Details */}
                   {(() => {
                     const myRanking = rankings.find((r) => r.user.id === user.id);
                     const myRank = myRanking ? myRanking.rank : null;
-                    
+
                     if (myRank === 1) {
                       return (
-                        <div className="w-full bg-yellow-500/5 border border-yellow-500/20 rounded-xl p-6 mb-6">
-                          <h3 className="text-xl font-bold text-yellow-400 mb-2">🏆 Champion - Leaderboard Rank #1</h3>
-                          <p className="text-slate-300 text-xs mb-6 leading-relaxed">
+                        <div className="w-full bg-yellow-500/10 border border-yellow-500/25 rounded-xl p-6 mb-6">
+                          <h3 className="text-xl font-bold text-yellow-700 mb-2">🏆 Champion - Leaderboard Rank #1</h3>
+                          <p className="text-slate-700 text-xs mb-6 leading-relaxed">
                             Congratulations Champion! You topped the leaderboard of the Sky Test Challenge. Your dedication, logic, and speed have earned you the ultimate Rank 1. Claim your exclusive giveaway gift below!
                           </p>
-                          
+
                           {giftClaimed ? (
-                            <div className="px-5 py-3 bg-green-500/10 text-green-400 border border-green-500/20 rounded-xl text-xs font-bold">
+                            <div className="px-5 py-3 bg-green-500/10 text-green-700 border border-green-500/20 rounded-xl text-xs font-bold">
                               ✓ Giveaway Gift Registered! We will contact you soon.
                             </div>
                           ) : (
@@ -631,107 +616,107 @@ export default function LeaderboardPage() {
                       );
                     } else if (myRank) {
                       return (
-                        <div className="w-full bg-white/3 border border-white/5 rounded-xl p-6 mb-6">
-                          <h3 className="text-lg font-bold text-white mb-1.5">Your Position: Rank #{myRank}</h3>
-                          <p className="text-slate-400 text-xs leading-relaxed max-w-sm mx-auto">
+                        <div className="w-full bg-slate-50 border border-slate-200 rounded-xl p-6 mb-6">
+                          <h3 className="text-lg font-bold text-slate-800 mb-1.5">Your Position: Rank #{myRank}</h3>
+                          <p className="text-slate-600 text-xs leading-relaxed max-w-sm mx-auto">
                             Great effort! You finished the challenge at Rank #{myRank}. Keep coding and refining your logic skills to top the next month's sprint!
                           </p>
                         </div>
                       );
                     } else {
                       return (
-                        <div className="w-full bg-white/3 border border-white/5 rounded-xl p-6 mb-6">
-                          <h3 className="text-sm font-semibold text-slate-400">Evaluating final leaderboard positions...</h3>
+                        <div className="w-full bg-slate-50 border border-slate-200 rounded-xl p-6 mb-6">
+                          <h3 className="text-sm font-semibold text-slate-500">Evaluating final leaderboard positions...</h3>
                         </div>
                       );
                     }
                   })()}
                 </div>
               ) : (
-                
+
                 /* PRE-START OR IN-PROGRESS OR WAITING STATUS */
                 (() => {
                   const now = new Date();
                   const nextActiveDay = userStatus.currentDay;
-                  
+
                   // July is index 6
                   const unlockDate = new Date(2026, 6, nextActiveDay, 0, 0, 0, 0);
                   const isUnlockedByDate = now.getTime() >= unlockDate.getTime();
-                  
+
                   // If we are before July 1st, 12 AM
                   if (now.getTime() < new Date(2026, 6, 1, 0, 0, 0, 0).getTime()) {
                     return (
-                      <div className="flex flex-col items-center justify-center py-20 bg-[#10121f] border border-white/7 rounded-2xl p-8 max-w-2xl mx-auto text-center shadow-xl">
-                        <div className="w-16 h-16 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center rounded-2xl mb-6">
-                          <FiLock className="w-8 h-8 text-indigo-400" />
+                      <div className="flex flex-col items-center justify-center py-20 bg-white border border-slate-200/80 rounded-2xl p-8 max-w-2xl mx-auto text-center shadow-xl">
+                        <div className="w-16 h-16 bg-indigo-500/10 text-indigo-500 border border-indigo-500/20 flex items-center justify-center rounded-2xl mb-6">
+                          <FiLock className="w-8 h-8 text-indigo-500" />
                         </div>
-                        <h2 className="text-2xl font-bold text-white mb-2">Roadmap Locked</h2>
-                        <p className="text-slate-400 text-sm mb-6 leading-relaxed">
-                          The official 30-Day Sky Test Challenge will begin on <span className="text-indigo-400 font-semibold">July 1st, 2026 at 12:00 AM IST</span>.
+                        <h2 className="text-2xl font-bold text-slate-900 mb-2">Roadmap Locked</h2>
+                        <p className="text-slate-600 text-sm mb-6 leading-relaxed">
+                          The official 30-Day Sky Test Challenge will begin on <span className="text-indigo-600 font-semibold">July 1st, 2026 at 12:00 AM IST</span>.
                         </p>
-                        <span className="px-4 py-2 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-bold text-xs rounded-full uppercase tracking-wider">
+                        <span className="px-4 py-2 bg-indigo-500/10 text-indigo-600 border border-indigo-500/20 font-bold text-xs rounded-full uppercase tracking-wider">
                           Opens July 1st 12:00 AM
                         </span>
                       </div>
                     );
                   }
-                  
+
                   // If the next active challenge day is not date-unlocked yet
                   if (!isUnlockedByDate) {
                     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                     const dateStr = `${months[unlockDate.getMonth()]} ${unlockDate.getDate()}, ${unlockDate.getFullYear()} at 12:00 AM`;
                     return (
-                      <div className="flex flex-col items-center justify-center py-20 bg-[#10121f] border border-white/7 rounded-2xl p-8 max-w-2xl mx-auto text-center shadow-xl">
-                        <div className="w-16 h-16 bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center rounded-2xl mb-6">
-                          <FiLock className="w-8 h-8 text-amber-400" />
+                      <div className="flex flex-col items-center justify-center py-20 bg-white border border-slate-200/80 rounded-2xl p-8 max-w-2xl mx-auto text-center shadow-xl">
+                        <div className="w-16 h-16 bg-amber-500/10 text-amber-600 border border-amber-500/20 flex items-center justify-center rounded-2xl mb-6">
+                          <FiLock className="w-8 h-8 text-amber-600" />
                         </div>
-                        <h2 className="text-2xl font-bold text-white mb-2">Day {nextActiveDay} Challenge is Locked</h2>
-                        <p className="text-slate-400 text-sm mb-6 leading-relaxed">
+                        <h2 className="text-2xl font-bold text-slate-900 mb-2">Day {nextActiveDay} Challenge is Locked</h2>
+                        <p className="text-slate-600 text-sm mb-6 leading-relaxed">
                           Today's challenge is not available yet. Day {nextActiveDay} challenge will open on:
-                          <span className="text-indigo-400 font-semibold block mt-1.5">{dateStr}</span>
+                          <span className="text-indigo-600 font-semibold block mt-1.5">{dateStr}</span>
                         </p>
-                        <span className="px-4 py-2 bg-white/3 border border-white/5 text-slate-500 font-bold text-xs rounded-full uppercase tracking-wider">
+                        <span className="px-4 py-2 bg-slate-100 border border-slate-200 text-slate-500 font-bold text-xs rounded-full uppercase tracking-wider">
                           Locked - Wait for Tomorrow
                         </span>
                       </div>
                     );
                   }
-                  
+
                   // Otherwise, challenge is open and ready to solve!
                   return (
-                    <div className="flex flex-col items-center justify-center py-16 bg-[#10121f] border border-white/7 rounded-2xl p-8 max-w-2xl mx-auto shadow-xl">
-                      <div className="w-16 h-16 bg-indigo-500/10 text-indigo-400 flex items-center justify-center rounded-2xl mb-6">
-                        <FiUnlock className="w-8 h-8 text-indigo-400" />
+                    <div className="flex flex-col items-center justify-center py-16 bg-white border border-slate-200/80 rounded-2xl p-8 max-w-2xl mx-auto shadow-xl">
+                      <div className="w-16 h-16 bg-indigo-500/10 text-indigo-500 flex items-center justify-center rounded-2xl mb-6">
+                        <FiUnlock className="w-8 h-8 text-indigo-500" />
                       </div>
-                      <h2 className="text-2xl font-bold text-white mb-1">
+                      <h2 className="text-2xl font-bold text-slate-900 mb-1">
                         Day {nextActiveDay} Challenge is Available!
                       </h2>
                       <p className="text-xs text-slate-500 mb-6 uppercase tracking-wider font-semibold">
                         Official Sky Test Challenge Conditions Apply
                       </p>
-    
-                      <div className="w-full bg-[#080b14] border border-white/7 rounded-xl p-6 mb-8 text-left space-y-3.5 text-sm">
-                        <h4 className="font-bold text-slate-300 flex items-center gap-2 mb-1">
-                          <FiCode className="text-indigo-400" /> Test Instructions:
+
+                      <div className="w-full bg-slate-50 border border-slate-200 rounded-xl p-6 mb-8 text-left space-y-3.5 text-sm">
+                        <h4 className="font-bold text-slate-700 flex items-center gap-2 mb-1">
+                          <FiCode className="text-indigo-600" /> Test Instructions:
                         </h4>
-                        <div className="flex gap-3 text-slate-400">
-                          <span className="text-indigo-400 font-bold">1.</span>
+                        <div className="flex gap-3 text-slate-600">
+                          <span className="text-indigo-600 font-bold">1.</span>
                           <p>Clicking "Start Challenge Test" automatically launches the browser in **Full Screen Mode**.</p>
                         </div>
-                        <div className="flex gap-3 text-slate-400">
-                          <span className="text-red-400 font-bold">2.</span>
-                          <p className="text-red-300/90 font-medium">Any attempt to exit fullscreen mode, switch tabs, or click out of the test window will **disqualify** you and terminate the test immediately.</p>
+                        <div className="flex gap-3 text-slate-600">
+                          <span className="text-red-500 font-bold">2.</span>
+                          <p className="text-red-600 font-medium">Any attempt to exit fullscreen mode, switch tabs, or click out of the test window will **disqualify** you and terminate the test immediately.</p>
                         </div>
-                        <div className="flex gap-3 text-slate-400">
-                          <span className="text-indigo-400 font-bold">3.</span>
+                        <div className="flex gap-3 text-slate-600">
+                          <span className="text-indigo-600 font-bold">3.</span>
                           <p>Solve the problem by passing all example inputs and hidden test cases, then click **Submit Code**.</p>
                         </div>
-                        <div className="flex gap-3 text-slate-400">
-                          <span className="text-indigo-400 font-bold">4.</span>
+                        <div className="flex gap-3 text-slate-600">
+                          <span className="text-indigo-600 font-bold">4.</span>
                           <p>C, C++, Java, Python 3, and Node.js JavaScript are fully supported.</p>
                         </div>
                       </div>
-    
+
                       <button
                         onClick={handleStartTest}
                         className="px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-extrabold rounded-xl shadow-lg shadow-indigo-500/20 text-sm uppercase tracking-wider transition-all duration-300 hover:scale-[1.02]"
@@ -743,89 +728,88 @@ export default function LeaderboardPage() {
                 })()
               )
             ) : (
-              
+
               /* 3. ACTIVE FULLSCREEN HACKERRANK SPLIT WORKSPACE */
               <div className="flex flex-col gap-6">
-                
+
                 {/* Fullscreen Header banner */}
-                <div className="bg-[#12131a] border border-[#20232a] rounded-xl p-4 flex justify-between items-center shadow-lg">
+                <div className="bg-white border border-slate-200/80 rounded-xl p-4 flex justify-between items-center shadow-sm">
                   <div className="flex items-center gap-3">
                     <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
-                    <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                    <span className="text-xs font-bold text-slate-700 uppercase tracking-widest">
                       Live Testing Mode • Day {challengeData?.day}
                     </span>
                   </div>
-                  <div className="text-xs text-red-400 font-semibold uppercase tracking-wider bg-red-500/10 border border-red-500/10 px-3 py-1 rounded">
+                  <div className="text-xs text-red-600 font-semibold uppercase tracking-wider bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded-lg">
                     Do not exit full screen (Esc) or switch tabs
                   </div>
                 </div>
 
                 {/* Left/Right Splits */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  
-                  {/* Left Column: Challenge Description */}
+
+                  {/* Left Column: Challenge Description - Light Theme */}
                   {loadingChallenge ? (
-                    <div className="flex flex-col items-center justify-center py-24 bg-[#12131a] rounded-xl border border-[#20232a] h-full">
-                      <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-                      <p className="text-gray-400">Loading challenge details...</p>
+                    <div className="flex flex-col items-center justify-center py-24 bg-white rounded-xl border border-slate-200/80 h-full shadow-sm">
+                      <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-indigo-500 mb-4"></div>
+                      <p className="text-slate-500 text-sm">Loading challenge details...</p>
                     </div>
                   ) : challengeData ? (
-                    <div className="bg-[#12131a] border border-[#20232a] rounded-xl p-6 shadow-xl flex flex-col justify-between h-[calc(100vh-140px)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-800">
+                    <div className="bg-white border border-slate-200/80 rounded-xl p-6 shadow-sm flex flex-col justify-between h-[calc(100vh-140px)] overflow-y-auto pr-2">
                       <div>
-                        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#20232a] pb-4 mb-4">
+                        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-4">
                           <div>
-                            <span className="text-[10px] font-bold tracking-widest uppercase bg-blue-600/10 text-blue-400 border border-blue-500/20 px-2 py-1 rounded">
+                            <span className="text-[10px] font-bold tracking-widest uppercase bg-indigo-500/10 text-indigo-600 border border-indigo-500/20 px-2.5 py-1 rounded-full">
                               Week {challengeData.week} • {challengeData.difficulty}
                             </span>
-                            <h2 className="text-xl font-bold text-white mt-2">
+                            <h2 className="text-xl font-bold text-slate-900 mt-2">
                               Day {challengeData.day}: {challengeData.title}
                             </h2>
                           </div>
-                          
+
                           {/* Timer Widget */}
-                          <div className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg font-mono text-sm font-semibold ${
-                            timeLeft > 180 ? "bg-green-500/10 text-green-400 border-green-500/20" : 
-                            timeLeft > 60 ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" : 
-                            "bg-red-500/10 text-red-400 border-red-500/20 animate-pulse"
-                          }`}>
+                          <div className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg font-mono text-sm font-semibold ${timeLeft > 180 ? "bg-green-500/10 text-green-700 border-green-500/20" :
+                              timeLeft > 60 ? "bg-amber-500/10 text-amber-700 border-amber-500/20" :
+                                "bg-red-500/10 text-red-600 border-red-500/20 animate-pulse"
+                            }`}>
                             <FiClock className={timeLeft <= 60 ? "animate-bounce" : "animate-pulse"} />
                             <span>{formatTime(timeLeft)}</span>
                           </div>
                         </div>
 
-                        <p className="text-gray-300 leading-relaxed text-sm whitespace-pre-line mb-6 font-sans">
+                        <p className="text-slate-600 leading-relaxed text-sm whitespace-pre-line mb-6 font-sans">
                           {challengeData.description}
                         </p>
 
                         {/* Example inputs & outputs */}
                         <div className="grid grid-cols-1 gap-4">
-                          <div className="bg-[#181a24] border border-[#272a37] p-4 rounded-lg">
-                            <span className="text-xs font-bold text-gray-400 tracking-wide block mb-2 uppercase">
+                          <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl">
+                            <span className="text-[10px] font-bold text-slate-500 tracking-widest block mb-2 uppercase">
                               Example Input 1
                             </span>
-                            <pre className="font-mono text-xs text-blue-300 whitespace-pre-wrap">
+                            <pre className="font-mono text-xs text-indigo-600 whitespace-pre-wrap bg-indigo-500/5 border border-indigo-500/10 p-2 rounded-lg">
                               {challengeData.exampleInput1}
                             </pre>
-                            <span className="text-xs font-bold text-gray-400 tracking-wide block mt-3 mb-2 uppercase">
+                            <span className="text-[10px] font-bold text-slate-500 tracking-widest block mt-3 mb-2 uppercase">
                               Example Output 1
                             </span>
-                            <pre className="font-mono text-xs text-green-300 whitespace-pre-wrap">
+                            <pre className="font-mono text-xs text-green-700 whitespace-pre-wrap bg-green-500/5 border border-green-500/10 p-2 rounded-lg">
                               {challengeData.exampleOutput1}
                             </pre>
                           </div>
 
                           {challengeData.exampleInput2 && (
-                            <div className="bg-[#181a24] border border-[#272a37] p-4 rounded-lg">
-                              <span className="text-xs font-bold text-gray-400 tracking-wide block mb-2 uppercase">
+                            <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl">
+                              <span className="text-[10px] font-bold text-slate-500 tracking-widest block mb-2 uppercase">
                                 Example Input 2
                               </span>
-                              <pre className="font-mono text-xs text-blue-300 whitespace-pre-wrap">
+                              <pre className="font-mono text-xs text-indigo-600 whitespace-pre-wrap bg-indigo-500/5 border border-indigo-500/10 p-2 rounded-lg">
                                 {challengeData.exampleInput2}
                               </pre>
-                              <span className="text-xs font-bold text-gray-400 tracking-wide block mt-3 mb-2 uppercase">
+                              <span className="text-[10px] font-bold text-slate-500 tracking-widest block mt-3 mb-2 uppercase">
                                 Example Output 2
                               </span>
-                              <pre className="font-mono text-xs text-green-300 whitespace-pre-wrap">
+                              <pre className="font-mono text-xs text-green-700 whitespace-pre-wrap bg-green-500/5 border border-green-500/10 p-2 rounded-lg">
                                 {challengeData.exampleOutput2}
                               </pre>
                             </div>
@@ -833,15 +817,15 @@ export default function LeaderboardPage() {
                         </div>
                       </div>
 
-                      <div className="mt-6 pt-3 border-t border-[#20232a] flex items-center justify-between text-xs text-gray-500">
+                      <div className="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
                         <span>Max Execution Time: {challengeData.maxExecutionTime}ms</span>
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-[#12131a] border border-[#20232a] rounded-xl p-8 text-center text-gray-400 h-full flex flex-col justify-center items-center">
-                      <FiAlertCircle className="w-12 h-12 mx-auto text-yellow-500 mb-4" />
-                      <p className="font-bold text-white mb-2">No Active Challenge</p>
-                      <p>Check roadmap above.</p>
+                    <div className="bg-white border border-slate-200/80 rounded-xl p-8 text-center h-full flex flex-col justify-center items-center shadow-sm">
+                      <FiAlertCircle className="w-12 h-12 mx-auto text-amber-500 mb-4" />
+                      <p className="font-bold text-slate-800 mb-2">No Active Challenge</p>
+                      <p className="text-slate-500 text-sm">Check roadmap above.</p>
                     </div>
                   )}
 
@@ -856,7 +840,7 @@ export default function LeaderboardPage() {
                               <FiCode className="text-blue-500" />
                               <span className="text-xs font-bold text-gray-300 uppercase tracking-wider">Editor Workspace</span>
                             </div>
-                            
+
                             {/* Language selection dropdown */}
                             <select
                               value={language}
@@ -937,7 +921,7 @@ export default function LeaderboardPage() {
                               <h3 className="text-sm font-bold text-gray-400 mb-4 tracking-wider uppercase">
                                 Execution Outputs
                               </h3>
-                              
+
                               {/* Sample Run results */}
                               {runResults && (
                                 <div className="space-y-4">
@@ -985,11 +969,10 @@ export default function LeaderboardPage() {
                               {/* Submission results */}
                               {submitResults && (
                                 <div>
-                                  <div className={`p-4 rounded-lg flex items-start gap-3 border ${
-                                    submitResults.success
+                                  <div className={`p-4 rounded-lg flex items-start gap-3 border ${submitResults.success
                                       ? "bg-green-500/5 border-green-500/20 text-green-400"
                                       : "bg-red-500/5 border-red-500/20 text-red-400"
-                                  }`}>
+                                    }`}>
                                     {submitResults.success ? (
                                       <FiCheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
                                     ) : (
@@ -1000,7 +983,7 @@ export default function LeaderboardPage() {
                                       <p className="text-xs opacity-80 mt-1">{submitResults.msg}</p>
                                     </div>
                                   </div>
-                                  
+
                                   <div className="mt-4 space-y-2">
                                     {submitResults.results.map((tc, idx) => (
                                       <div key={idx} className="flex justify-between items-center text-xs bg-[#0a0b0d] p-3 rounded border border-[#20232a]">
@@ -1037,22 +1020,22 @@ export default function LeaderboardPage() {
         {activeTab === "leaderboard" && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Left: Leaderboard rankings list (9 columns) */}
-            <div className="lg:col-span-9 bg-[#12131a] border border-[#20232a] rounded-xl overflow-hidden shadow-2xl p-6">
+            <div className="lg:col-span-9 bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-xl p-6">
               <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
-                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
                   Leader Board - Programming Tutorials
                 </h2>
-                
+
                 {/* Search input */}
                 <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
                   <div className="relative w-full md:w-64">
-                    <FiSearch className="absolute left-3 top-3 text-gray-500 w-4 h-4" />
+                    <FiSearch className="absolute left-3 top-3 text-slate-400 w-4 h-4" />
                     <input
                       type="text"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       placeholder="Search name or roll no..."
-                      className="bg-[#0f1015] border border-[#272a37] text-gray-300 text-xs rounded-md pl-9 pr-3 py-2 w-full focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="bg-white border border-slate-200 text-slate-800 text-xs rounded-md pl-9 pr-3 py-2 w-full focus:outline-none focus:border-indigo-500 shadow-sm"
                     />
                   </div>
                 </div>
@@ -1060,17 +1043,17 @@ export default function LeaderboardPage() {
 
               {loadingLeaderboard ? (
                 <div className="flex flex-col items-center justify-center py-20">
-                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mb-3"></div>
-                  <p className="text-gray-400 text-sm">Loading rankings...</p>
+                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-600 mb-3"></div>
+                  <p className="text-slate-500 text-sm">Loading rankings...</p>
                 </div>
               ) : filteredRankings.length === 0 ? (
-                <div className="text-center py-16 text-gray-400">
+                <div className="text-center py-16 text-slate-500">
                   No users found matching your search.
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full text-left text-sm text-gray-300">
-                    <thead className="bg-[#161722] text-gray-400 uppercase text-[10px] tracking-widest border-b border-[#20232a]">
+                  <table className="w-full text-left text-sm text-slate-655">
+                    <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] tracking-widest border-b border-slate-200">
                       <tr>
                         <th className="py-4 px-6 font-bold w-16">#</th>
                         <th className="py-4 px-6 font-bold">Name</th>
@@ -1079,10 +1062,10 @@ export default function LeaderboardPage() {
                         <th className="py-4 px-6 font-bold text-center">Total Time taken</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#1e202b]">
+                    <tbody className="divide-y divide-slate-100">
                       {currentRankings.map((entry, index) => {
                         const absoluteRank = indexOfFirstItem + index + 1;
-                        
+
                         // Highlight top 3
                         let rowStyle = "";
                         let rankBadge = absoluteRank;
@@ -1098,12 +1081,12 @@ export default function LeaderboardPage() {
                         }
 
                         return (
-                          <tr key={entry.user.id} className={`hover:bg-[#161722]/50 transition duration-150 ${rowStyle}`}>
-                            <td className="py-4 px-6 font-bold text-sm text-gray-400">{rankBadge}</td>
-                            <td className="py-4 px-6 font-bold text-white">{entry.user.name}</td>
-                            <td className="py-4 px-6 font-mono text-xs text-gray-400">{entry.user.rollNumber}</td>
-                            <td className="py-4 px-6 text-center text-blue-400 font-extrabold">{entry.solvedCount} / 30</td>
-                            <td className="py-4 px-6 text-center font-mono text-xs text-gray-300">
+                          <tr key={entry.user.id} className={`hover:bg-slate-50/50 transition duration-150 ${rowStyle}`}>
+                            <td className="py-4 px-6 font-bold text-sm text-slate-500">{rankBadge}</td>
+                            <td className="py-4 px-6 font-bold text-slate-800">{entry.user.name}</td>
+                            <td className="py-4 px-6 font-mono text-xs text-slate-500">{entry.user.rollNumber}</td>
+                            <td className="py-4 px-6 text-center text-blue-600 font-extrabold">{entry.solvedCount} / 30</td>
+                            <td className="py-4 px-6 text-center font-mono text-xs text-slate-600">
                               {formatTime(entry.totalTime)}
                             </td>
                           </tr>
@@ -1114,29 +1097,28 @@ export default function LeaderboardPage() {
 
                   {/* Pagination */}
                   {totalPages > 1 && (
-                    <div className="flex justify-between items-center border-t border-[#20232a] pt-4 mt-6">
-                      <span className="text-xs text-gray-500">
+                    <div className="flex justify-between items-center border-t border-slate-200 pt-4 mt-6">
+                      <span className="text-xs text-slate-500">
                         Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, filteredRankings.length)} of {filteredRankings.length} rank entries
                       </span>
-                      
-                      <div className="flex items-center gap-1.5 bg-[#0f1015] border border-[#20232a] p-1 rounded">
+
+                      <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 p-1 rounded">
                         <button
                           onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
                           disabled={currentPage === 1}
-                          className="p-1 rounded text-gray-400 hover:text-white hover:bg-[#1c1d29] disabled:opacity-30 disabled:pointer-events-none"
+                          className="p-1 rounded text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 disabled:opacity-30 disabled:pointer-events-none"
                         >
                           <FiChevronLeft className="w-5 h-5" />
                         </button>
-                        
+
                         {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
                           <button
                             key={p}
                             onClick={() => setCurrentPage(p)}
-                            className={`px-3 py-1 text-xs font-semibold rounded ${
-                              currentPage === p
-                                ? "bg-blue-600 text-white"
-                                : "text-gray-400 hover:text-white hover:bg-[#1c1d29]"
-                            }`}
+                            className={`px-3 py-1 text-xs font-semibold rounded ${currentPage === p
+                                ? "bg-indigo-600 text-white"
+                                : "text-slate-500 hover:text-indigo-600 hover:bg-indigo-50"
+                              }`}
                           >
                             {p}
                           </button>
@@ -1145,7 +1127,7 @@ export default function LeaderboardPage() {
                         <button
                           onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
                           disabled={currentPage === totalPages}
-                          className="p-1 rounded text-gray-400 hover:text-white hover:bg-[#1c1d29] disabled:opacity-30 disabled:pointer-events-none"
+                          className="p-1 rounded text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 disabled:opacity-30 disabled:pointer-events-none"
                         >
                           <FiChevronRight className="w-5 h-5" />
                         </button>
@@ -1175,31 +1157,30 @@ export default function LeaderboardPage() {
               onClick={() => setShowGiftModal(false)}
               className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             />
-            
+
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-[#161822] border border-[#272a37] w-full max-w-md p-6 rounded-xl shadow-2xl relative z-10 text-gray-200"
+              className="bg-white border border-slate-200 w-full max-w-md p-6 rounded-xl shadow-2xl relative z-10 text-slate-800"
             >
-              <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                <FiGift className="text-green-500" /> Claim Sky Tech Makers T-Shirt
+              <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <FiGift className="text-green-600" /> Claim Sky Tech Makers T-Shirt
               </h2>
-              
+
               <form onSubmit={handleClaimGift} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-gray-400 uppercase mb-2">Select T-Shirt Size</label>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Select T-Shirt Size</label>
                   <div className="grid grid-cols-5 gap-2">
                     {["S", "M", "L", "XL", "XXL"].map((sz) => (
                       <button
                         type="button"
                         key={sz}
                         onClick={() => setGiftSize(sz)}
-                        className={`py-2 text-xs font-bold rounded-lg border text-center transition-all ${
-                          giftSize === sz
-                            ? "bg-blue-600 border-blue-500 text-white"
-                            : "bg-[#0d0e12] border-[#272a37] text-gray-400 hover:text-white"
-                        }`}
+                        className={`py-2 text-xs font-bold rounded-lg border text-center transition-all ${giftSize === sz
+                            ? "bg-indigo-600 border-indigo-600 text-white shadow-sm"
+                            : "bg-slate-50 border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                          }`}
                       >
                         {sz}
                       </button>
@@ -1208,7 +1189,7 @@ export default function LeaderboardPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="phone" className="block text-xs font-bold text-gray-400 uppercase mb-1">
+                  <label htmlFor="phone" className="block text-xs font-bold text-slate-500 uppercase mb-1">
                     Phone Number
                   </label>
                   <input
@@ -1218,12 +1199,12 @@ export default function LeaderboardPage() {
                     value={giftPhone}
                     onChange={(e) => setGiftPhone(e.target.value)}
                     placeholder="+91 98765 43210"
-                    className="w-full bg-[#0d0e12] border border-[#272a37] text-gray-200 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full bg-white border border-slate-200 text-slate-800 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="address" className="block text-xs font-bold text-gray-400 uppercase mb-1">
+                  <label htmlFor="address" className="block text-xs font-bold text-slate-500 uppercase mb-1">
                     Shipping Address
                   </label>
                   <textarea
@@ -1233,7 +1214,7 @@ export default function LeaderboardPage() {
                     value={giftAddress}
                     onChange={(e) => setGiftAddress(e.target.value)}
                     placeholder="Enter your complete shipping address..."
-                    className="w-full bg-[#0d0e12] border border-[#272a37] text-gray-200 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
+                    className="w-full bg-white border border-slate-200 text-slate-800 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-indigo-500 resize-none"
                   />
                 </div>
 
@@ -1241,7 +1222,7 @@ export default function LeaderboardPage() {
                   <button
                     type="button"
                     onClick={() => setShowGiftModal(false)}
-                    className="px-4 py-2 border border-[#272a37] text-gray-400 hover:text-white rounded-lg text-sm transition"
+                    className="px-4 py-2 border border-slate-200 text-slate-500 hover:text-slate-800 rounded-lg text-sm transition"
                   >
                     Cancel
                   </button>

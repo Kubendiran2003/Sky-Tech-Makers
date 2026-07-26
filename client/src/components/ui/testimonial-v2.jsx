@@ -100,10 +100,10 @@ const TestimonialsColumn = (props) => {
                     boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.12), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)",
                     transition: { type: "spring", stiffness: 400, damping: 17 }
                   }}
-                  className="p-10 rounded-3xl border border-white/8 shadow-lg shadow-black/5 max-w-xs w-full bg-[#10121f] transition-all duration-300 cursor-default select-none group focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  className="p-10 rounded-3xl border border-slate-200/80 shadow-md max-w-xs w-full bg-slate-50 transition-all duration-300 cursor-default select-none group focus:outline-none hover:bg-white hover:border-indigo-500/20 hover:shadow-xl"
                 >
                   <blockquote className="m-0 p-0">
-                    <p className="text-slate-300 leading-relaxed font-normal m-0 transition-colors duration-300">
+                    <p className="text-slate-600 leading-relaxed font-normal m-0 transition-colors duration-300">
                       {text}
                     </p>
                     <footer className="flex items-center gap-3 mt-6">
@@ -112,10 +112,10 @@ const TestimonialsColumn = (props) => {
                         height={40}
                         src={image}
                         alt={`Avatar of ${name}`}
-                        className="h-10 w-10 rounded-full object-cover ring-2 ring-white/10 group-hover:ring-indigo-500/30 transition-all duration-300 ease-in-out"
+                        className="h-10 w-10 rounded-full object-cover ring-2 ring-slate-200 group-hover:ring-indigo-500/30 transition-all duration-300 ease-in-out"
                       />
                       <div className="flex flex-col">
-                        <cite className="font-semibold not-italic tracking-tight leading-5 text-white transition-colors duration-300">
+                        <cite className="font-semibold not-italic tracking-tight leading-5 text-slate-900 transition-colors duration-300">
                           {name}
                         </cite>
                         <span className="text-sm leading-5 tracking-tight text-slate-500 mt-0.5 transition-colors duration-300">
@@ -157,10 +157,10 @@ export const TestimonialsSection = () => {
             <span className="text-xs font-semibold text-indigo-400 uppercase tracking-wider">Testimonials</span>
           </div>
 
-          <h2 id="testimonials-heading" className="text-3xl md:text-5xl font-bold text-white mb-4 text-center">
-            What our users <span className="gradient-text">say</span>
+          <h2 id="testimonials-heading" className="text-3xl md:text-5xl font-bold text-slate-900 mb-4 text-center">
+            What our users <span className="gradient-text-blue">say</span>
           </h2>
-          <p className="text-center text-slate-400 text-base max-w-2xl mx-auto leading-relaxed">
+          <p className="text-center text-slate-600 text-base max-w-2xl mx-auto leading-relaxed">
             Discover how thousands of teams streamline their operations with our platform.
           </p>
         </div>

@@ -72,8 +72,38 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const forgotPassword = async (email) => {
+    try {
+      const { data } = await axios.post(`${BASE_URL}/api/auth/forgot-password`, { email });
+      toast.success(data.msg || 'Password reset email sent!');
+      return { success: true, message: data.msg };
+    } catch (error) {
+      const msg = error.response?.data?.msg || 'Failed to send password reset email';
+      toast.error(msg);
+      throw new Error(msg);
+    }
+  };
+
+  const resetPassword = async (token, password) => {
+    try {
+      const { data } = await axios.put(
+        `${BASE_URL}/api/auth/reset-password/${token}`,
+        { password },
+        { withCredentials: true }
+      );
+      setUser(null);
+      toast.success(data.msg || 'Password updated successfully! Please sign in with your new password.');
+      navigate('/login');
+      return { success: true };
+    } catch (error) {
+      const msg = error.response?.data?.msg || 'Password reset failed';
+      toast.error(msg);
+      throw new Error(msg);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, forgotPassword, resetPassword }}>
       {children}
     </AuthContext.Provider>
   );

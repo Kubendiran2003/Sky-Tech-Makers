@@ -110,10 +110,10 @@ export default function Blogs() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden bg-[#f4f6f8]">
       {/* Background */}
-      <div className="absolute inset-0 grid-pattern opacity-30 pointer-events-none" />
-      <div className="absolute top-0 left-1/3 w-96 h-96 bg-indigo-600/8 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
+      <div className="absolute top-0 left-1/3 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Hero Header */}
@@ -127,10 +127,10 @@ export default function Blogs() {
             <FiBook className="w-3.5 h-3.5 text-indigo-400" />
             <span className="text-xs font-semibold text-indigo-400 uppercase tracking-wider">Tech Articles</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-            Explore <span className="gradient-text">Tech Blogs</span>
+          <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-4">
+            Explore <span className="gradient-text-blue">Tech Blogs</span>
           </h1>
-          <p className="text-slate-400 text-lg max-w-xl mx-auto">
+          <p className="text-slate-600 text-lg max-w-xl mx-auto">
             Deep-dive articles, tutorials, and insights from the Sky Tech Makers community.
           </p>
         </motion.div>
@@ -144,18 +144,18 @@ export default function Blogs() {
         >
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-grow">
-              <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-4 h-4" />
+              <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
               <input
                 type="text"
                 placeholder="Search by title, content, or tags..."
-                className="w-full pl-11 pr-10 py-3 bg-[#131524] border border-white/8 rounded-xl text-white placeholder-slate-600 text-sm focus:outline-none focus:border-indigo-500/50 focus:bg-indigo-500/5 focus:ring-2 focus:ring-indigo-500/15 transition-all duration-200"
+                className="w-full pl-11 pr-10 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all duration-200 shadow-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm("")}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                 >
                   <FiX className="w-4 h-4" />
                 </button>
@@ -175,7 +175,7 @@ export default function Blogs() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="rounded-2xl bg-white/3 border border-white/6 h-72 animate-pulse" />
+              <div key={i} className="rounded-2xl bg-white border border-slate-200/80 h-72 animate-pulse shadow-sm" />
             ))}
           </div>
         ) : filteredBlogs.length === 0 ? (
@@ -184,11 +184,11 @@ export default function Blogs() {
             animate={{ opacity: 1 }}
             className="text-center py-20"
           >
-            <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <FiBook className="w-8 h-8 text-slate-600" />
+            <div className="w-16 h-16 bg-slate-200/50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <FiBook className="w-8 h-8 text-slate-400" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-400 mb-2">No blogs found</h3>
-            <p className="text-slate-600 text-sm">Try adjusting your search or check back later.</p>
+            <h3 className="text-xl font-semibold text-slate-700 mb-2">No blogs found</h3>
+            <p className="text-slate-500 text-sm">Try adjusting your search or check back later.</p>
           </motion.div>
         ) : (
           <>
@@ -206,13 +206,13 @@ export default function Blogs() {
             </motion.div>
 
             {/* Pagination Controls */}
-            <div className="mt-16 pt-8 border-t border-white/5 flex flex-col items-center gap-6">
+            <div className="mt-16 pt-8 border-t border-slate-200 flex flex-col items-center gap-6">
               {/* Centered page numbers */}
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="w-10 h-10 rounded-xl border border-white/8 bg-[#131524] text-slate-400 flex items-center justify-center hover:bg-indigo-500/10 hover:text-white disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-slate-400 transition-all duration-200"
+                  className="w-10 h-10 rounded-xl border border-slate-200 bg-white text-slate-600 flex items-center justify-center hover:bg-indigo-50 hover:text-indigo-600 disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-slate-400 transition-all duration-200 shadow-sm"
                   aria-label="Previous Page"
                 >
                   <FiChevronLeft className="w-5 h-5" />
@@ -221,7 +221,7 @@ export default function Blogs() {
                 {getPageNumbers().map((page, idx) => {
                   if (page === "...") {
                     return (
-                      <span key={`dots-${idx}`} className="px-2 text-slate-600 font-semibold select-none">
+                      <span key={`dots-${idx}`} className="px-2 text-slate-450 font-semibold select-none">
                         ...
                       </span>
                     );
@@ -230,10 +230,10 @@ export default function Blogs() {
                     <button
                       key={`page-${page}`}
                       onClick={() => setCurrentPage(page)}
-                      className={`w-10 h-10 rounded-xl border font-semibold text-sm transition-all duration-200 ${
+                      className={`w-10 h-10 rounded-xl border font-semibold text-sm transition-all duration-200 shadow-sm ${
                         currentPage === page
-                          ? "bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-600/20"
-                          : "border-white/8 bg-[#131524] text-slate-400 hover:bg-indigo-500/10 hover:text-white"
+                          ? "bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+                          : "border-slate-200 bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600"
                       }`}
                     >
                       {page}
@@ -244,7 +244,7 @@ export default function Blogs() {
                 <button
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="w-10 h-10 rounded-xl border border-white/8 bg-[#131524] text-slate-400 flex items-center justify-center hover:bg-indigo-500/10 hover:text-white disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-slate-400 transition-all duration-200"
+                  className="w-10 h-10 rounded-xl border border-slate-200 bg-white text-slate-600 flex items-center justify-center hover:bg-indigo-50 hover:text-indigo-600 disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-slate-400 transition-all duration-200 shadow-sm"
                   aria-label="Next Page"
                 >
                   <FiChevronRight className="w-5 h-5" />
@@ -262,7 +262,7 @@ export default function Blogs() {
                       setUserSelectedSize(true);
                       setCurrentPage(1);
                     }}
-                    className="bg-[#131524] border border-white/8 rounded-lg px-2.5 py-1.5 text-slate-300 font-semibold focus:outline-none focus:border-indigo-500/40 transition-colors"
+                    className="bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-slate-700 font-semibold focus:outline-none focus:border-indigo-500 transition-colors shadow-sm"
                   >
                     <option value={8}>8</option>
                     <option value={10}>10</option>

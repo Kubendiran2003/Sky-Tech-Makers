@@ -1,6 +1,7 @@
 // /server/models/User.js
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 
 const userSchema = new mongoose.Schema({
   name: String,
@@ -9,6 +10,8 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ["User", "Admin"], default: "User" },
   rollNumber: { type: String, unique: true, sparse: true },
   savedBlogs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Blog" }],
+  resetPasswordToken: String,
+  resetPasswordExpire: Date,
 });
 
 userSchema.pre("save", async function () {
@@ -18,6 +21,23 @@ userSchema.pre("save", async function () {
 
 userSchema.methods.comparePassword = function (plain) {
   return bcrypt.compare(plain, this.password);
+};
+
+// Generate and hash password reset token
+userSchema.methods.getResetPasswordToken = function () {
+  // Generate random bytes token
+  const resetToken = crypto.randomBytes(20).toString("hex");
+
+  // Hash token and set to resetPasswordToken field
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  // Set expire time (15 minutes)
+  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
+
+  return resetToken;
 };
 
 module.exports = mongoose.model("User", userSchema);
